@@ -1,6 +1,6 @@
 // BEGONIA API Gateway Signature
 // based on https://github.com/datastream/aws/blob/master/signv4.go
-package begoniagosdk
+package gosdk
 
 import (
 	"bytes"

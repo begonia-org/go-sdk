@@ -1,4 +1,4 @@
-module github.com/begonia-org/begonia-go-sdk
+module github.com/begonia-org/go-sdk
 
 go 1.20
 

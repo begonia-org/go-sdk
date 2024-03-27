@@ -8,7 +8,7 @@ package v1
 
 import (
 	context "context"
-	v1 "github.com/begonia-org/begonia-go-sdk/common/api/v1"
+	v1 "github.com/begonia-org/go-sdk/common/api/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

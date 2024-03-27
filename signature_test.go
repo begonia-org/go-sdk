@@ -1,4 +1,4 @@
-package begoniagosdk
+package gosdk
 
 import (
 	"fmt"
