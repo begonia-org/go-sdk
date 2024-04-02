@@ -133,7 +133,7 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.begonia.AppsService/AddApps", runtime.WithHTTPPathPattern("/api/v1/app/create/batch"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/AddApps", runtime.WithHTTPPathPattern("/api/v1/app/create/batch"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -158,7 +158,7 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.begonia.AppsService/CreateApp", runtime.WithHTTPPathPattern("/api/v1/app/create"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/CreateApp", runtime.WithHTTPPathPattern("/api/v1/app/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -183,7 +183,7 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.begonia.AppsService/GetApps", runtime.WithHTTPPathPattern("/api/v1/app/list"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/GetApps", runtime.WithHTTPPathPattern("/api/v1/app/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -247,7 +247,7 @@ func RegisterAppsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.begonia.AppsService/AddApps", runtime.WithHTTPPathPattern("/api/v1/app/create/batch"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/AddApps", runtime.WithHTTPPathPattern("/api/v1/app/create/batch"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -269,7 +269,7 @@ func RegisterAppsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.begonia.AppsService/CreateApp", runtime.WithHTTPPathPattern("/api/v1/app/create"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/CreateApp", runtime.WithHTTPPathPattern("/api/v1/app/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -291,7 +291,7 @@ func RegisterAppsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.begonia.AppsService/GetApps", runtime.WithHTTPPathPattern("/api/v1/app/list"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/GetApps", runtime.WithHTTPPathPattern("/api/v1/app/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

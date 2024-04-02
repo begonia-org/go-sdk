@@ -20,15 +20,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	FileService_Upload_FullMethodName                  = "/begonia.org.begonia.FileService/Upload"
-	FileService_UploadMultipartFile_FullMethodName     = "/begonia.org.begonia.FileService/UploadMultipartFile"
-	FileService_InitiateMultipartUpload_FullMethodName = "/begonia.org.begonia.FileService/InitiateMultipartUpload"
-	FileService_CompleteMultipartUpload_FullMethodName = "/begonia.org.begonia.FileService/CompleteMultipartUpload"
-	FileService_AbortMultipartUpload_FullMethodName    = "/begonia.org.begonia.FileService/AbortMultipartUpload"
-	FileService_Download_FullMethodName                = "/begonia.org.begonia.FileService/Download"
-	FileService_Delete_FullMethodName                  = "/begonia.org.begonia.FileService/Delete"
-	FileService_DownloadForRange_FullMethodName        = "/begonia.org.begonia.FileService/DownloadForRange"
-	FileService_Metadata_FullMethodName                = "/begonia.org.begonia.FileService/Metadata"
+	FileService_Upload_FullMethodName                  = "/begonia.org.sdk.FileService/Upload"
+	FileService_UploadMultipartFile_FullMethodName     = "/begonia.org.sdk.FileService/UploadMultipartFile"
+	FileService_InitiateMultipartUpload_FullMethodName = "/begonia.org.sdk.FileService/InitiateMultipartUpload"
+	FileService_CompleteMultipartUpload_FullMethodName = "/begonia.org.sdk.FileService/CompleteMultipartUpload"
+	FileService_AbortMultipartUpload_FullMethodName    = "/begonia.org.sdk.FileService/AbortMultipartUpload"
+	FileService_Download_FullMethodName                = "/begonia.org.sdk.FileService/Download"
+	FileService_Delete_FullMethodName                  = "/begonia.org.sdk.FileService/Delete"
+	FileService_DownloadForRange_FullMethodName        = "/begonia.org.sdk.FileService/DownloadForRange"
+	FileService_Metadata_FullMethodName                = "/begonia.org.sdk.FileService/Metadata"
 )
 
 // FileServiceClient is the client API for FileService service.
@@ -361,7 +361,7 @@ func _FileService_Metadata_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var FileService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "begonia.org.begonia.FileService",
+	ServiceName: "begonia.org.sdk.FileService",
 	HandlerType: (*FileServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

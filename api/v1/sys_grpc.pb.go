@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	SystemService_GetInfo_FullMethodName = "/begonia.org.begonia.SystemService/GetInfo"
+	SystemService_GetInfo_FullMethodName = "/begonia.org.sdk.SystemService/GetInfo"
 )
 
 // SystemServiceClient is the client API for SystemService service.
@@ -96,7 +96,7 @@ func _SystemService_GetInfo_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SystemService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "begonia.org.begonia.SystemService",
+	ServiceName: "begonia.org.sdk.SystemService",
 	HandlerType: (*SystemServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

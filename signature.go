@@ -119,10 +119,17 @@ func NewGatewayRequestFromHttp(req *http.Request) (*GatewayRequest, error) {
 	// headers := make(map[string]string)
 	headers := &RequestHeader{headers: make(map[string]string)}
 	for k, v := range req.Header {
+		if strings.EqualFold(k, "Content-Type") {
+			continue
+			// log.Println("header:", k, v)
+
+			// headers.Set("content-type", "application/grpc")
+		}
 		headers.Set(k, strings.Join(v, ","))
 	}
 	payload, _ := io.ReadAll(req.Body)
 	req.Body = io.NopCloser(bytes.NewBuffer(payload))
+
 	return &GatewayRequest{Headers: headers, Method: req.Method, URL: req.URL, Host: req.Host, Payload: io.NopCloser(bytes.NewBuffer(payload))}, nil
 }
 func NewAppAuthSigner(key, secret string) AppAuthSigner {
@@ -279,6 +286,14 @@ func (app *AppAuthSignerImpl) AuthHeaderValue(signatureStr, accessKeyStr string,
 
 // SignRequest set Authorization header
 func (app *AppAuthSignerImpl) Sign(request *GatewayRequest) (string, error) {
+	unusedHeaderKeys := []string{"content-type", "content-length", "accept-encoding"}
+	for _, key := range request.Headers.Keys() {
+		for _, unusedKey := range unusedHeaderKeys {
+			if strings.EqualFold(key, unusedKey) {
+				request.Headers.Del(key)
+			}
+		}
+	}
 	var t time.Time
 	var err error
 	var date string
@@ -318,7 +333,6 @@ func (app *AppAuthSignerImpl) getSignaturehHeader(auth string) []string {
 	strArr := strings.Split(auth, ",")
 	for _, v := range strArr {
 		if strings.Contains(strings.ToLower(v), "signedheaders") {
-			// // // log.Printf("origin signedHeaders:%s", v)
 			signature := strings.Split(v, "=")
 			return strings.Split(signature[1], ";")
 		}
@@ -326,6 +340,14 @@ func (app *AppAuthSignerImpl) getSignaturehHeader(auth string) []string {
 	return nil
 }
 func (app *AppAuthSignerImpl) SignRequest(request *GatewayRequest) error {
+	unusedHeaderKeys := []string{"content-type", "content-length", "accept-encoding"}
+	for _, key := range request.Headers.Keys() {
+		for _, unusedKey := range unusedHeaderKeys {
+			if strings.EqualFold(key, unusedKey) {
+				request.Headers.Del(key)
+			}
+		}
+	}
 	signature, err := app.Sign(request)
 	if err != nil {
 		return err

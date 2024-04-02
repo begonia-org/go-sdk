@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_Login_FullMethodName    = "/begonia.org.begonia.AuthService/Login"
-	AuthService_Logout_FullMethodName   = "/begonia.org.begonia.AuthService/Logout"
-	AuthService_Account_FullMethodName  = "/begonia.org.begonia.AuthService/Account"
-	AuthService_AuthSeed_FullMethodName = "/begonia.org.begonia.AuthService/AuthSeed"
-	AuthService_Regsiter_FullMethodName = "/begonia.org.begonia.AuthService/Regsiter"
+	AuthService_Login_FullMethodName    = "/begonia.org.sdk.AuthService/Login"
+	AuthService_Logout_FullMethodName   = "/begonia.org.sdk.AuthService/Logout"
+	AuthService_Account_FullMethodName  = "/begonia.org.sdk.AuthService/Account"
+	AuthService_AuthSeed_FullMethodName = "/begonia.org.sdk.AuthService/AuthSeed"
+	AuthService_Regsiter_FullMethodName = "/begonia.org.sdk.AuthService/Regsiter"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -228,7 +228,7 @@ func _AuthService_Regsiter_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "begonia.org.begonia.AuthService",
+	ServiceName: "begonia.org.sdk.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

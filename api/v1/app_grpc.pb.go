@@ -20,9 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AppsService_AddApps_FullMethodName   = "/begonia.org.begonia.AppsService/AddApps"
-	AppsService_CreateApp_FullMethodName = "/begonia.org.begonia.AppsService/CreateApp"
-	AppsService_GetApps_FullMethodName   = "/begonia.org.begonia.AppsService/GetApps"
+	AppsService_AddApps_FullMethodName   = "/begonia.org.sdk.AppsService/AddApps"
+	AppsService_CreateApp_FullMethodName = "/begonia.org.sdk.AppsService/CreateApp"
+	AppsService_GetApps_FullMethodName   = "/begonia.org.sdk.AppsService/GetApps"
 )
 
 // AppsServiceClient is the client API for AppsService service.
@@ -167,7 +167,7 @@ func _AppsService_GetApps_Handler(srv interface{}, ctx context.Context, dec func
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AppsService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "begonia.org.begonia.AppsService",
+	ServiceName: "begonia.org.sdk.AppsService",
 	HandlerType: (*AppsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

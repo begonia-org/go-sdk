@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/begonia-org/begonia/endpoint v0.0.0-20240223143650-a47df10db8e0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
+	github.com/sirupsen/logrus v1.8.1
 	github.com/smartystreets/goconvey v1.8.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20240221002015-b0ce06bbee7c
 	google.golang.org/grpc v1.62.1

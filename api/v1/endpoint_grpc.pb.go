@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	EndpointService_Create_FullMethodName  = "/begonia.org.begonia.EndpointService/Create"
-	EndpointService_Update_FullMethodName  = "/begonia.org.begonia.EndpointService/Update"
-	EndpointService_Delete_FullMethodName  = "/begonia.org.begonia.EndpointService/Delete"
-	EndpointService_List_FullMethodName    = "/begonia.org.begonia.EndpointService/List"
-	EndpointService_Details_FullMethodName = "/begonia.org.begonia.EndpointService/Details"
+	EndpointService_Create_FullMethodName  = "/begonia.org.sdk.EndpointService/Create"
+	EndpointService_Config_FullMethodName  = "/begonia.org.sdk.EndpointService/Config"
+	EndpointService_Update_FullMethodName  = "/begonia.org.sdk.EndpointService/Update"
+	EndpointService_Delete_FullMethodName  = "/begonia.org.sdk.EndpointService/Delete"
+	EndpointService_List_FullMethodName    = "/begonia.org.sdk.EndpointService/List"
+	EndpointService_Details_FullMethodName = "/begonia.org.sdk.EndpointService/Details"
 )
 
 // EndpointServiceClient is the client API for EndpointService service.
@@ -31,6 +32,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EndpointServiceClient interface {
 	Create(ctx context.Context, in *AddEndpointRequest, opts ...grpc.CallOption) (*AddEndpointResponse, error)
+	Config(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error)
 	Update(ctx context.Context, in *UpdateEndpointRequest, opts ...grpc.CallOption) (*UpdateEndpointResponse, error)
 	Delete(ctx context.Context, in *DeleteEndpointRequest, opts ...grpc.CallOption) (*DeleteEndpointResponse, error)
 	List(ctx context.Context, in *ListEndpointRequest, opts ...grpc.CallOption) (*ListEndpointResponse, error)
@@ -48,6 +50,15 @@ func NewEndpointServiceClient(cc grpc.ClientConnInterface) EndpointServiceClient
 func (c *endpointServiceClient) Create(ctx context.Context, in *AddEndpointRequest, opts ...grpc.CallOption) (*AddEndpointResponse, error) {
 	out := new(AddEndpointResponse)
 	err := c.cc.Invoke(ctx, EndpointService_Create_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *endpointServiceClient) Config(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error) {
+	out := new(AddEndpointResponse)
+	err := c.cc.Invoke(ctx, EndpointService_Config_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -95,6 +106,7 @@ func (c *endpointServiceClient) Details(ctx context.Context, in *DetailsEndpoint
 // for forward compatibility
 type EndpointServiceServer interface {
 	Create(context.Context, *AddEndpointRequest) (*AddEndpointResponse, error)
+	Config(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error)
 	Update(context.Context, *UpdateEndpointRequest) (*UpdateEndpointResponse, error)
 	Delete(context.Context, *DeleteEndpointRequest) (*DeleteEndpointResponse, error)
 	List(context.Context, *ListEndpointRequest) (*ListEndpointResponse, error)
@@ -108,6 +120,9 @@ type UnimplementedEndpointServiceServer struct {
 
 func (UnimplementedEndpointServiceServer) Create(context.Context, *AddEndpointRequest) (*AddEndpointResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedEndpointServiceServer) Config(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Config not implemented")
 }
 func (UnimplementedEndpointServiceServer) Update(context.Context, *UpdateEndpointRequest) (*UpdateEndpointResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -148,6 +163,24 @@ func _EndpointService_Create_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EndpointServiceServer).Create(ctx, req.(*AddEndpointRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EndpointService_Config_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EndpointSrvConfig)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EndpointServiceServer).Config(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EndpointService_Config_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EndpointServiceServer).Config(ctx, req.(*EndpointSrvConfig))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -228,12 +261,16 @@ func _EndpointService_Details_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EndpointService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "begonia.org.begonia.EndpointService",
+	ServiceName: "begonia.org.sdk.EndpointService",
 	HandlerType: (*EndpointServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Create",
 			Handler:    _EndpointService_Create_Handler,
+		},
+		{
+			MethodName: "Config",
+			Handler:    _EndpointService_Config_Handler,
 		},
 		{
 			MethodName: "Update",
