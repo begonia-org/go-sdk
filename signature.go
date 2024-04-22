@@ -167,9 +167,7 @@ func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod 
 			if strings.EqualFold(k, "x-gateway-params") {
 				xparams = v[0]
 			}
-			// if strings.EqualFold(k, HeaderXContentSha256) {
-			// 	bodySha256 = v[0]
-			// }
+	
 			values := []string{}
 			for _, val := range v {
 				hs := strings.Split(val, ",")

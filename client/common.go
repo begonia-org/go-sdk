@@ -1,0 +1,119 @@
+package client
+
+import (
+	"context"
+	"io"
+	"net/http"
+	"net/url"
+	"strings"
+
+	gosdk "github.com/begonia-org/go-sdk"
+)
+
+type Response struct {
+	StatusCode int
+	RequestId  string
+	Err        error
+}
+
+type BaseAPI struct {
+	cli     *http.Client
+	baseUrl string
+	signer  gosdk.AppAuthSigner
+}
+
+const UPLOAD_API = "/api/v1/file"
+const INIT_PART_API = "/api/v1/file/part/init"
+const UPLOAD_PART_API = "/api/v1/file/part"
+const COMPLETE_PART_API = "/api/v1/file/part/complete"
+const ABORT_PART_API = "/api/v1/file/part/abort"
+const Download_API = "/api/v1/file"
+const Metadata_API = "/api/v1/file/metadata"
+const Download_PART_API = "/api/v1/file/part"
+
+func NewAPIClient(addr, accessKey, secretKey string) *BaseAPI {
+	return &BaseAPI{
+		cli:     &http.Client{},
+		baseUrl: addr,
+		signer:  gosdk.NewAppAuthSigner(accessKey, secretKey),
+	}
+}
+func (bc *BaseAPI) requestSignature(_ context.Context, req *http.Request) error {
+
+	gw, err := gosdk.NewGatewayRequestFromHttp(req)
+	if err != nil {
+		return err
+	}
+	// log.Println("客户端开始签名")
+	err = bc.signer.SignRequest(gw)
+	// log.Println("客户端签名完成")
+	if err != nil {
+		return err
+	}
+	for _, k := range gw.Headers.Keys() {
+		v := gw.Headers.Get(k)
+		if strings.Contains(v, ",") {
+			values := strings.Split(v, ",")
+			for _, value := range values {
+				req.Header.Add(k, value)
+			}
+		} else {
+			req.Header.Set(k, v)
+
+		}
+
+	}
+	return nil
+
+}
+func (bc *BaseAPI) Get(ctx context.Context, uri string, headers map[string]string) (*http.Response, error) {
+	api, _ := url.JoinPath(bc.baseUrl, uri)
+	req := bc.buildRequest(ctx, http.MethodGet, api, headers, nil)
+	return bc.request(ctx, req)
+}
+
+func (bc *BaseAPI) Post(ctx context.Context, uri string, headers map[string]string, payload io.Reader) (*http.Response, error) {
+	api, _ := url.JoinPath(bc.baseUrl, uri)
+	req := bc.buildRequest(ctx, http.MethodPost, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
+
+	return bc.request(ctx, req)
+}
+func (bc *BaseAPI) Put(ctx context.Context, uri string, headers map[string]string, payload io.Reader) (*http.Response, error) {
+	api, _ := url.JoinPath(bc.baseUrl, uri)
+	req := bc.buildRequest(ctx, http.MethodPut, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
+
+	return bc.request(ctx, req)
+}
+func (bc *BaseAPI) Delete(ctx context.Context, uri string, headers map[string]string, payload io.Reader) (*http.Response, error) {
+	api, _ := url.JoinPath(bc.baseUrl, uri)
+	req := bc.buildRequest(ctx, http.MethodDelete, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
+
+	return bc.request(ctx, req)
+
+}
+func (bc *BaseAPI) Patch(ctx context.Context, uri string, headers map[string]string, payload io.Reader) (*http.Response, error) {
+	api, _ := url.JoinPath(bc.baseUrl, uri)
+
+	req := bc.buildRequest(ctx, http.MethodPatch, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
+
+	return bc.request(ctx, req)
+}
+func (bc *BaseAPI) buildRequest(_ context.Context, method, uri string, headers map[string]string, payload io.Reader) *http.Request {
+	req, _ := http.NewRequest(method, uri, payload)
+	req.Header.Set("Accept", "application/json")
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
+	return req
+}
+func (bc *BaseAPI) request(ctx context.Context, req *http.Request) (*http.Response, error) {
+	err := bc.requestSignature(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return bc.cli.Do(req)
+}
