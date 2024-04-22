@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"net"
 
 	v1 "github.com/begonia-org/go-sdk/api/v1"
@@ -16,6 +15,7 @@ type server struct {
 }
 
 func (s *server) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
+	fmt.Printf("Received: %v\n", in.GetMsg())
 	return &v1.HelloReply{Message: "Hello " + in.Msg}, nil
 }
 func (s *server) SayHelloStreamReply(in *v1.HelloRequest, stream v1.Greeter_SayHelloStreamReplyServer) error {
@@ -39,7 +39,6 @@ func (s *server) SayHelloStreamReply(in *v1.HelloRequest, stream v1.Greeter_SayH
 	return io.EOF
 }
 func (s *server) SayHelloGet(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
-	log.Println("Get请求")
 	return &v1.HelloReply{Message: "Hello, world!"}, nil
 }
 func (s *server) SayHelloStreamSend(stream v1.Greeter_SayHelloStreamSendServer) error {

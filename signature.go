@@ -7,8 +7,10 @@ import (
 	"context"
 	"crypto/hmac"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"sort"
@@ -16,8 +18,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 type RequestHeader struct {
@@ -76,12 +77,82 @@ func (h *RequestHeader) ToMetadata() metadata.MD {
 func NewRequestHeader() *RequestHeader {
 	return &RequestHeader{headers: make(map[string]string)}
 }
+
+// applyFieldsMask apply field mask to request payload
+// 将pb格式的fieldmask转换为json格式参与签名
+func applyFieldsMask(v interface{}) ([]byte, error) {
+	payload, err := json.Marshal(v)
+	if err != nil {
+		return nil, fmt.Errorf("json marshal request payload error:%w", err)
+	}
+	pMap := make(map[string]interface{})
+	err = json.Unmarshal(payload, &pMap)
+	if err != nil {
+		return nil, fmt.Errorf("json unmarshal request payload error:%w", err)
+
+	}
+	if message, ok := v.(protoreflect.ProtoMessage); ok && message != nil {
+		md := message.ProtoReflect().Descriptor()
+		// 遍历所有字段
+		for i := 0; i < md.Fields().Len(); i++ {
+			field := md.Fields().Get(i)
+
+			// 检查字段是否是FieldMask类型
+			if field.Message() != nil && field.Message().FullName() == "google.protobuf.FieldMask" {
+
+				pathsField := message.ProtoReflect().Get(field).Message().Descriptor().Fields().ByJSONName("paths")
+				log.Printf("field:%s,paths:%s", field.JSONName(), pathsField.JSONName())
+				// 获取FieldMask中的paths字段
+				list := message.ProtoReflect().Get(field).Message().Get(pathsField).List()
+				paths := make([]string, 0)
+				for i := 0; i < list.Len(); i++ {
+					paths = append(paths, list.Get(i).String())
+				}
+				pMap[field.JSONName()] = strings.Join(paths, ",")
+			}
+		}
+	}
+	log.Printf("pMap:%v", pMap)
+	return json.Marshal(pMap)
+
+}
+
+// filtersUriParams 过滤uri上的附加的参数
+func filtersUriParams(xparams string, body []byte) []byte {
+	if xparams == "" || body == nil {
+		return body
+	}
+	params := strings.Split(xparams, ",")
+	bodyMap := make(map[string]interface{})
+	err := json.Unmarshal(body, &bodyMap)
+	if err != nil {
+		log.Println("json unmarshal error:", err)
+		return body
+
+	}
+	for _, param := range params {
+		delete(bodyMap, param)
+	}
+	if len(bodyMap) == 0 {
+		return nil
+	}
+	body, err = json.Marshal(bodyMap)
+	if err != nil {
+		log.Println("json marshal error:", err)
+		return body
+
+	}
+	return body
+
+}
 func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod string) (*GatewayRequest, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	headers := &RequestHeader{headers: make(map[string]string)}
 	host := ""
 	uri := fullMethod
 	method := fullMethod
+	xparams := ""
+	// bodySha256 := ""
 	if ok {
 		for k, v := range md {
 			if strings.EqualFold(k, "x-forwarded-host") {
@@ -93,6 +164,12 @@ func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod 
 			if strings.EqualFold(k, "x-http-method") {
 				method = v[0]
 			}
+			if strings.EqualFold(k, "x-gateway-params") {
+				xparams = v[0]
+			}
+			// if strings.EqualFold(k, HeaderXContentSha256) {
+			// 	bodySha256 = v[0]
+			// }
 			values := []string{}
 			for _, val := range v {
 				hs := strings.Split(val, ",")
@@ -105,9 +182,12 @@ func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod 
 		}
 	}
 	u, _ := url.Parse(fmt.Sprintf("http://%s%s", host, uri))
-	// 兼容 application/json
-	payload, _ := protojson.Marshal(req.(proto.Message))
-	// // log.Printf("request payloadxxxx:%v", payload)
+	var payload []byte
+	payload, _ = json.Marshal(req)
+	if xparams != "" {
+		payload = filtersUriParams(xparams, payload)
+	}
+
 	return &GatewayRequest{Headers: headers,
 		Method:  method,
 		Host:    host,
@@ -119,16 +199,19 @@ func NewGatewayRequestFromHttp(req *http.Request) (*GatewayRequest, error) {
 	// headers := make(map[string]string)
 	headers := &RequestHeader{headers: make(map[string]string)}
 	for k, v := range req.Header {
+		// 在gateway 中会被修改为application/grpc
+		// 因此不参与签名
 		if strings.EqualFold(k, "Content-Type") {
 			continue
-			// log.Println("header:", k, v)
-
-			// headers.Set("content-type", "application/grpc")
 		}
 		headers.Set(k, strings.Join(v, ","))
 	}
-	payload, _ := io.ReadAll(req.Body)
-	req.Body = io.NopCloser(bytes.NewBuffer(payload))
+	// payload := []byte("")
+	var payload []byte = nil
+	if req.Body != nil {
+		payload, _ = io.ReadAll(req.Body)
+		req.Body = io.NopCloser(bytes.NewBuffer(payload))
+	}
 
 	return &GatewayRequest{Headers: headers, Method: req.Method, URL: req.URL, Host: req.Host, Payload: io.NopCloser(bytes.NewBuffer(payload))}, nil
 }
@@ -254,7 +337,6 @@ func (app *AppAuthSignerImpl) RequestPayload(request *GatewayRequest) ([]byte, e
 // Create a "String to Sign".
 func (app *AppAuthSignerImpl) StringToSign(canonicalRequest string, t time.Time) (string, error) {
 	hashStruct := sha256.New()
-	// log.Println("canonicalRequest to sign:", canonicalRequest)
 	_, err := hashStruct.Write([]byte(canonicalRequest))
 	if err != nil {
 		return "", err
@@ -297,14 +379,18 @@ func (app *AppAuthSignerImpl) Sign(request *GatewayRequest) (string, error) {
 	var t time.Time
 	var err error
 	var date string
-	if date := request.Headers.Get(HeaderXDateTime); date != "" {
+	if date = request.Headers.Get(HeaderXDateTime); date != "" {
 		t, err = time.Parse(DateFormat, date)
+		if err != nil {
+			return "", fmt.Errorf("Failed to parse X-Date: %w", err)
+		}
 		if time.Since(t) > time.Minute*1 {
 			return "", fmt.Errorf("X-Date is expired")
 		}
 	}
 	if err != nil || date == "" {
 		t = time.Now()
+		// log.Printf("X-Date is not set, using current time,%v,%v", err, date)
 		request.Headers.Set(HeaderXDateTime, t.UTC().Format(DateFormat))
 	}
 	request.Headers.Set(HeaderXAccessKey, app.Key)

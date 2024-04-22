@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/sha256"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -15,6 +16,8 @@ import (
 	api "github.com/begonia-org/go-sdk/api/v1"
 	common "github.com/begonia-org/go-sdk/common/api/v1"
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
 type Response struct {
@@ -25,6 +28,18 @@ type Response struct {
 type AddEndpointConfigResponse struct {
 	*Response
 	Id string
+}
+type EndpointDetailsResponse struct {
+	*Response
+	*api.DetailsEndpointResponse
+}
+type EndpointPatchResponse struct {
+	*Response
+	*api.UpdateEndpointResponse
+}
+type EndpointDeleteResponse struct{
+	*Response
+	*api.DeleteEndpointResponse
 }
 type BegoniaClient interface {
 }
@@ -88,16 +103,22 @@ func (bc *BegoniaClientImpl) Get(ctx context.Context, uri string, headers map[st
 func (bc *BegoniaClientImpl) Post(ctx context.Context, uri string, headers map[string]string, payload io.Reader) (*http.Response, error) {
 	api, _ := url.JoinPath(bc.baseUrl, uri)
 	req := bc.buildRequest(ctx, http.MethodPost, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
+
 	return bc.request(ctx, req)
 }
 func (bc *BegoniaClientImpl) Put(ctx context.Context, uri string, headers map[string]string, payload io.Reader) (*http.Response, error) {
 	api, _ := url.JoinPath(bc.baseUrl, uri)
 	req := bc.buildRequest(ctx, http.MethodPut, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
+
 	return bc.request(ctx, req)
 }
 func (bc *BegoniaClientImpl) Delete(ctx context.Context, uri string, headers map[string]string, payload io.Reader) (*http.Response, error) {
 	api, _ := url.JoinPath(bc.baseUrl, uri)
 	req := bc.buildRequest(ctx, http.MethodDelete, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
+
 	return bc.request(ctx, req)
 
 }
@@ -105,11 +126,13 @@ func (bc *BegoniaClientImpl) Patch(ctx context.Context, uri string, headers map[
 	api, _ := url.JoinPath(bc.baseUrl, uri)
 
 	req := bc.buildRequest(ctx, http.MethodPatch, api, headers, payload)
+	req.Header.Set("Content-Type", "application/json")
 
 	return bc.request(ctx, req)
 }
 func (bc *BegoniaClientImpl) buildRequest(_ context.Context, method, uri string, headers map[string]string, payload io.Reader) *http.Request {
 	req, _ := http.NewRequest(method, uri, payload)
+	req.Header.Set("Accept", "application/json")
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
@@ -140,7 +163,7 @@ func (bc *BegoniaClientImpl) UploadFile(ctx context.Context, srcPath string, dst
 		Sha256:      hashStr,
 		ContentType: http.DetectContentType(data),
 	}
-	payload, err := protojson.Marshal(&content)
+	payload, err := json.Marshal(&content)
 	if err != nil {
 		return "", fmt.Errorf("Failed to marshal data to JSON: %w", err)
 
@@ -163,7 +186,7 @@ func (bc *BegoniaClientImpl) UploadFile(ctx context.Context, srcPath string, dst
 		defer rsp.Body.Close()
 		apiRsp := &common.HttpResponse{}
 		data, _ := io.ReadAll(rsp.Body)
-		err := protojson.Unmarshal(data, apiRsp)
+		err := json.Unmarshal(data, apiRsp)
 		if err != nil {
 			return "", err
 		}
@@ -177,93 +200,143 @@ func (bc *BegoniaClientImpl) UploadFile(ctx context.Context, srcPath string, dst
 	return "", nil
 }
 
-func (bc *BegoniaClientImpl) CreateEndpoint(ctx context.Context, endpoint *api.AddEndpointRequest) (*api.AddEndpointResponse, error) {
-	apiEndpoint, _ := url.JoinPath(bc.baseUrl, "/api/v1/endpoint")
-	payload, err := protojson.Marshal(endpoint)
+// PostEndpointConfig Post endpoint config to register endpoint
+func (bc *BegoniaClientImpl) PostEndpointConfig(ctx context.Context, config *api.EndpointSrvConfig) (*AddEndpointConfigResponse, error) {
+	payload, err := json.Marshal(config)
 	if err != nil {
 		return nil, err
 	}
-	req, _ := http.NewRequest(http.MethodPost, apiEndpoint, strings.NewReader(string(payload)))
-	req.Header.Set("Content-Type", "application/json")
-	err = bc.requestSignature(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	rsp, err := bc.cli.Do(req)
+
+	rsp, err := bc.Post(ctx, "/api/v1/endpoint", nil, strings.NewReader(string(payload)))
+
 	if err != nil {
 		return nil, err
 	}
 
 	if rsp != nil {
-		defer rsp.Body.Close()
-		apiRsp := &common.HttpResponse{}
-		data, _ := io.ReadAll(rsp.Body)
-		err := protojson.Unmarshal(data, apiRsp)
+		added := &api.AddEndpointResponse{}
+		resp, err := bc.unmarshal(rsp, added)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to unmarshal JSON to HttpResponse: %w", err)
+			return nil, err
 		}
-		val := apiRsp.Data
-		if status := apiRsp.Code; common.Code(status) != common.Code_OK {
-			return nil, fmt.Errorf("Failed to create endpoint: %s", apiRsp.Message)
-		}
-		jsonBytes, err := protojson.Marshal(val)
-		if err != nil {
-			return nil, fmt.Errorf("Failed to marshal data to JSON: %w", err)
-		}
+		return &AddEndpointConfigResponse{
+			Response: resp,
+			Id:       added.UniqueKey,
+		}, nil
 
-		// 将 JSON 字符串反序列化为目标 pb 结构体
-		var endpoint *api.AddEndpointResponse = &api.AddEndpointResponse{}
-		if err := protojson.Unmarshal(jsonBytes, endpoint); err != nil {
-			return nil, fmt.Errorf("Failed to unmarshal JSON to Endpoint: %w", err)
-		}
-		return endpoint, nil
-	}
-
-	return nil, errors.New("create endpoint failed")
-}
-
-func (bc *BegoniaClientImpl) RegisterEndpoint(ctx context.Context, config *api.EndpointSrvConfig) (*AddEndpointConfigResponse, error) {
-	apiEndpoint, _ := url.JoinPath(bc.baseUrl, "/api/v1/endpoint/config")
-	payload, err := protojson.Marshal(config)
-	if err != nil {
-		return nil, err
-	}
-	req, _ := http.NewRequest(http.MethodPost, apiEndpoint, strings.NewReader(string(payload)))
-	req.Header.Set("Content-Type", "application/json")
-	err = bc.requestSignature(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	rsp, err := bc.cli.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp != nil {
-		defer rsp.Body.Close()
-		requestId := rsp.Header.Get("x-request-id")
-		apiRsp := &common.HttpResponse{}
-		data, _ := io.ReadAll(rsp.Body)
-		err := protojson.Unmarshal(data, apiRsp)
-		if err != nil {
-
-			return &AddEndpointConfigResponse{Response: &Response{
-				StatusCode: rsp.StatusCode,
-				RequestId:  requestId,
-				Err:        err,
-			}}, err
-		}
-		// val := apiRsp.Data.AsMap()
-		if status := apiRsp.Code; common.Code(status) != common.Code_OK {
-			return &AddEndpointConfigResponse{Response: &Response{
-				StatusCode: rsp.StatusCode,
-				RequestId:  requestId,
-				Err:        errors.New(apiRsp.Message),
-			}}, errors.New(apiRsp.Message)
-		}
-		return nil, nil
 	}
 
 	return nil, errors.New("add endpoint config failed")
+
+}
+func (bc *BegoniaClientImpl) GetEndpointDetails(ctx context.Context, endpointId string) (*EndpointDetailsResponse, error) {
+
+	rsp, err := bc.Get(ctx, "/api/v1/endpoint/"+endpointId, nil)
+	if err != nil {
+		return nil, err
+
+	}
+	if rsp != nil {
+		details := &api.DetailsEndpointResponse{}
+		resp, err := bc.unmarshal(rsp, details)
+		if err != nil {
+			return nil, err
+		}
+		return &EndpointDetailsResponse{
+			Response:                resp,
+			DetailsEndpointResponse: details,
+		}, nil
+	}
+
+	return nil, errors.New("get endpoint details failed")
+}
+func (bc *BegoniaClientImpl) unmarshal(rsp *http.Response, v interface{}) (*Response, error) {
+	if rsp == nil {
+		return nil, errors.New("response is nil")
+
+	}
+	defer rsp.Body.Close()
+	requestId := rsp.Header.Get("x-request-id")
+	apiRsp := &common.HttpResponse{}
+	data, _ := io.ReadAll(rsp.Body)
+	err := protojson.Unmarshal(data, apiRsp)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to unmarshal JSON to HttpResponse: %w", err)
+	}
+	// val := apiRsp.Data.AsMap()
+	dataRsp := &Response{
+		StatusCode: int(apiRsp.Code),
+		RequestId:  requestId,
+		Err:        errors.New(apiRsp.Message),
+	}
+	if status := apiRsp.Code; common.Code(status) != common.Code_OK {
+		return dataRsp, errors.New(apiRsp.Message)
+	}
+	// updated := *&api.UpdateEndpointResponse{}
+	jsonBytes, err := apiRsp.Data.MarshalJSON()
+	if err != nil {
+		return dataRsp, fmt.Errorf("Failed to marshal data to JSON: %w", err)
+	}
+	if err := protojson.Unmarshal(jsonBytes, v.(protoreflect.ProtoMessage)); err != nil {
+		return dataRsp, fmt.Errorf("Failed to unmarshal JSON to Endpoint: %w", err)
+	}
+	return dataRsp, nil
+
+}
+func (bc *BegoniaClientImpl) PatchEndpointConfig(ctx context.Context, config *api.EndpointSrvUpdateRequest) (*EndpointPatchResponse, error) {
+	payload, err := json.Marshal(config)
+	if err != nil {
+		return nil, err
+	}
+	pMap := map[string]interface{}{}
+	_ = json.Unmarshal(payload, &pMap)
+	mask := &fieldmaskpb.FieldMask{}
+	if bData, err := json.Marshal(pMap["mask"]); err == nil {
+		// pMap["mask"] = strings.Join(mask.Paths, ",")
+		if err := json.Unmarshal(bData, mask); err != nil {
+			return nil, err
+		}
+		pMap["mask"] = strings.Join(mask.Paths, ",")
+		payload, _ = json.Marshal(pMap)
+	}
+
+	rsp, err := bc.Patch(ctx, "/api/v1/endpoint", nil, strings.NewReader(string(payload)))
+	if err != nil {
+		return nil, err
+	}
+	if rsp != nil {
+		updated := &api.UpdateEndpointResponse{}
+		resp, err := bc.unmarshal(rsp, updated)
+		if err != nil {
+			return nil, err
+		}
+		return &EndpointPatchResponse{
+			Response:               resp,
+			UpdateEndpointResponse: updated,
+		}, nil
+
+	}
+
+	return nil, errors.New("add endpoint config failed")
+
+}
+
+func (bc *BegoniaClientImpl) DeleteEndpointConfig(ctx context.Context, endpointId string) (*EndpointDeleteResponse, error) {
+	rsp, err := bc.Delete(ctx, "/api/v1/endpoint/"+endpointId, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	if rsp != nil {
+		delRsp:=&api.DeleteEndpointResponse{}
+		resp, err := bc.unmarshal(rsp, delRsp)
+		if err != nil {
+			return nil, err
+		}
+		return &EndpointDeleteResponse{
+			Response: resp,
+			DeleteEndpointResponse: delRsp,
+		},nil
+	}
+	return nil, errors.New("delete endpoint config failed")
 
 }
