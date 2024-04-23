@@ -36,7 +36,6 @@ type UploadCompleteAPIResponse struct {
 	*Response
 	*api.CompleteMultipartUploadResponse
 }
-type uploadTask func(ctx context.Context, wg *sync.WaitGroup, uploadId string, partNumber int, data []byte) 
 
 func NewFilesAPI(addr, accessKey, secretKey string) *FilesAPI {
 	return &FilesAPI{
@@ -145,34 +144,32 @@ func (f *FilesAPI) UploadPart(ctx context.Context, data []byte, key string, part
 		return &UploadPartAPIResponse{Response: resp, UploadMultipartFileResponse: apiRsp}, nil
 	}
 	return nil, nil
-
 }
-
-func (f *FilesAPI) CompleteUpload(ctx context.Context, key string, uploadId string,sha256 string,useVersion bool) (*UploadCompleteAPIResponse, error) {
-	req:=&api.CompleteMultipartUploadRequest{
-		UploadId: uploadId,
-		Key: key,
-		Sha256: sha256,
+func (f *FilesAPI) CompleteUpload(ctx context.Context, key string, uploadId string, sha256 string, useVersion bool) (*UploadCompleteAPIResponse, error) {
+	req := &api.CompleteMultipartUploadRequest{
+		UploadId:   uploadId,
+		Key:        key,
+		Sha256:     sha256,
 		UseVersion: useVersion,
 	}
-	payload,err:=json.Marshal(req)
-	if err!=nil{
-		return nil,err
+	payload, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
 	}
-	rsp,err:=f.Post(ctx,COMPLETE_PART_API,nil,bytes.NewReader(payload))
-	if err!=nil{
-		return nil,err
+	rsp, err := f.Post(ctx, COMPLETE_PART_API, nil, bytes.NewReader(payload))
+	if err != nil {
+		return nil, err
 	}
-	if rsp!=nil{
-		apiRsp:=&api.CompleteMultipartUploadResponse{}
-		resp,err:=f.unmarshal(rsp,apiRsp)
-		if err!=nil{
-			return nil,err
+	if rsp != nil {
+		apiRsp := &api.CompleteMultipartUploadResponse{}
+		resp, err := f.unmarshal(rsp, apiRsp)
+		if err != nil {
+			return nil, err
 		}
-		return &UploadCompleteAPIResponse{Response: resp,CompleteMultipartUploadResponse: apiRsp},nil
-	
+		return &UploadCompleteAPIResponse{Response: resp, CompleteMultipartUploadResponse: apiRsp}, nil
+
 	}
-	return nil,nil
+	return nil, nil
 }
 func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key string, useVersion bool) (*UploadCompleteAPIResponse, error) {
 	initReq := &api.InitiateMultipartUploadRequest{
@@ -211,7 +208,7 @@ func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key
 		defer file.Close()
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
-		sha:=sha256.New()
+		sha := sha256.New()
 		for i := 0; i < int(partCount); i++ {
 			buffer := make([]byte, partSize)
 			n, err := file.Read(buffer)
@@ -249,8 +246,40 @@ func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key
 
 		// completeReq := &api.CompleteMultipartUploadRequest{}
 		// return apiRsp,nil
-		hexStr:=fmt.Sprintf("%x",sha.Sum(nil))
+		hexStr := fmt.Sprintf("%x", sha.Sum(nil))
 		return f.CompleteUpload(ctx, key, apiRsp.UploadId, hexStr, useVersion)
 	}
 	return nil, nil
+}
+
+func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, version string) (string, error) {
+	uri := fmt.Sprintf("%s?key=%s", Download_API, key)
+	headers := make(map[string]string)
+	headers["accept"] = "application/octet-stream"
+	rsp, err := f.Get(ctx, uri, headers)
+	if err != nil {
+		return "", err
+	}
+	if rsp != nil {
+		if rsp.StatusCode != http.StatusOK {
+			err := "unknown error"
+			if rsp.StatusCode == http.StatusNotFound {
+				err = "file not found"
+			}
+			return "", fmt.Errorf("Failed to download file: %s", err)
+		}
+		defer rsp.Body.Close()
+		file, err := os.Create(dst)
+		if err != nil {
+			return "", err
+		}
+		defer file.Close()
+		_, err = io.Copy(file, rsp.Body)
+		if err != nil {
+			return "", err
+		}
+		sha256Str := rsp.Header.Get("x-content-sha256")
+		return sha256Str, nil
+	}
+	return "", fmt.Errorf("Failed to download file")
 }

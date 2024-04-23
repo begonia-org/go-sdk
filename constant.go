@@ -9,7 +9,7 @@ const (
 )
 
 func GetMetadataKey(key string) string {
-	return MetadataKeyPrefix + "-" + key
+	return MetadataKeyPrefix + "-" + strings.ToLower(key)
 }
 
 func GetHttpHeaderKey(key string) string {

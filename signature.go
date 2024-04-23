@@ -112,7 +112,6 @@ func applyFieldsMask(v interface{}) ([]byte, error) {
 			}
 		}
 	}
-	log.Printf("pMap:%v", pMap)
 	return json.Marshal(pMap)
 
 }
@@ -167,7 +166,7 @@ func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod 
 			if strings.EqualFold(k, "x-gateway-params") {
 				xparams = v[0]
 			}
-	
+
 			values := []string{}
 			for _, val := range v {
 				hs := strings.Split(val, ",")
@@ -182,15 +181,17 @@ func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod 
 	u, _ := url.Parse(fmt.Sprintf("http://%s%s", host, uri))
 	var payload []byte
 	payload, _ = json.Marshal(req)
+
 	if xparams != "" {
 		payload = filtersUriParams(xparams, payload)
 	}
+	reader := io.NopCloser(bytes.NewBuffer(payload))
 
 	return &GatewayRequest{Headers: headers,
 		Method:  method,
 		Host:    host,
 		URL:     u,
-		Payload: io.NopCloser(bytes.NewBuffer(payload)),
+		Payload: reader,
 	}, nil
 }
 func NewGatewayRequestFromHttp(req *http.Request) (*GatewayRequest, error) {
@@ -205,13 +206,17 @@ func NewGatewayRequestFromHttp(req *http.Request) (*GatewayRequest, error) {
 		headers.Set(k, strings.Join(v, ","))
 	}
 	// payload := []byte("")
-	var payload []byte = nil
+	var payload []byte = []byte("{}")
 	if req.Body != nil {
 		payload, _ = io.ReadAll(req.Body)
 		req.Body = io.NopCloser(bytes.NewBuffer(payload))
 	}
+	var reader io.ReadCloser
+	if payload != nil {
+		reader = io.NopCloser(bytes.NewBuffer(payload))
 
-	return &GatewayRequest{Headers: headers, Method: req.Method, URL: req.URL, Host: req.Host, Payload: io.NopCloser(bytes.NewBuffer(payload))}, nil
+	}
+	return &GatewayRequest{Headers: headers, Method: req.Method, URL: req.URL, Host: req.Host, Payload: reader}, nil
 }
 func NewAppAuthSigner(key, secret string) AppAuthSigner {
 	return &AppAuthSignerImpl{Key: key, Secret: secret}
@@ -396,7 +401,6 @@ func (app *AppAuthSignerImpl) Sign(request *GatewayRequest) (string, error) {
 	// log.Printf("signedHeaders:%v", signedHeaders)
 
 	canonicalRequest, err := app.CanonicalRequest(request, signedHeaders)
-	// log.Printf("canonicalRequest:%s", canonicalRequest)
 	if err != nil {
 		return "", fmt.Errorf("Failed to create canonical request: %w", err)
 	}

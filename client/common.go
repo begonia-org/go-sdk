@@ -68,6 +68,7 @@ func (bc *BaseAPI) requestSignature(_ context.Context, req *http.Request) error 
 }
 func (bc *BaseAPI) Get(ctx context.Context, uri string, headers map[string]string) (*http.Response, error) {
 	api, _ := url.JoinPath(bc.baseUrl, uri)
+	api,_ = url.QueryUnescape(api)
 	req := bc.buildRequest(ctx, http.MethodGet, api, headers, nil)
 	return bc.request(ctx, req)
 }
