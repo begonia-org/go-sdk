@@ -101,7 +101,7 @@ func applyFieldsMask(v interface{}) ([]byte, error) {
 			if field.Message() != nil && field.Message().FullName() == "google.protobuf.FieldMask" {
 
 				pathsField := message.ProtoReflect().Get(field).Message().Descriptor().Fields().ByJSONName("paths")
-				log.Printf("field:%s,paths:%s", field.JSONName(), pathsField.JSONName())
+				// log.Printf("field:%s,paths:%s", field.JSONName(), pathsField.JSONName())
 				// 获取FieldMask中的paths字段
 				list := message.ProtoReflect().Get(field).Message().Get(pathsField).List()
 				paths := make([]string, 0)

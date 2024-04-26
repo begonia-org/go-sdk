@@ -1,5 +1,5 @@
 {
-    "/begonia.org.sdk.AppsService/AddApps": [
+    "/begonia.org.sdk.AppsService/Get": [
         {
             "Pattern": {},
             "Template": {
@@ -10,28 +10,22 @@
                     2,
                     1,
                     2,
-                    2,
-                    2,
-                    3,
-                    2,
-                    4
+                    2
                 ],
                 "Pool": [
                     "api",
                     "v1",
-                    "app",
-                    "create",
-                    "batch"
+                    "app"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/app/create/batch"
+                "Template": "/api/v1/app"
             },
-            "HttpMethod": "POST",
-            "FullMethodName": "/begonia.org.sdk.AppsService/AddApps",
-            "HttpUri": "/api/v1/app/create/batch",
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.AppsService/Get",
+            "HttpUri": "/api/v1/app",
             "PathParams": [],
-            "InName": "AddAppsRequest",
+            "InName": "AppsListRequest",
             "OutName": "APIResponse",
             "IsClientStream": false,
             "IsServerStream": false,
@@ -40,7 +34,7 @@
             "OutPkg": "begonia.org.sdk.common"
         }
     ],
-    "/begonia.org.sdk.AppsService/CreateApp": [
+    "/begonia.org.sdk.AppsService/Patch": [
         {
             "Pattern": {},
             "Template": {
@@ -51,23 +45,20 @@
                     2,
                     1,
                     2,
-                    2,
-                    2,
-                    3
+                    2
                 ],
                 "Pool": [
                     "api",
                     "v1",
-                    "app",
-                    "create"
+                    "app"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/app/create"
+                "Template": "/api/v1/app"
             },
-            "HttpMethod": "POST",
-            "FullMethodName": "/begonia.org.sdk.AppsService/CreateApp",
-            "HttpUri": "/api/v1/app/create",
+            "HttpMethod": "PATCH",
+            "FullMethodName": "/begonia.org.sdk.AppsService/Patch",
+            "HttpUri": "/api/v1/app",
             "PathParams": [],
             "InName": "CreateAppRequest",
             "OutName": "CreateAppResponse",
@@ -78,7 +69,7 @@
             "OutPkg": "begonia.org.sdk"
         }
     ],
-    "/begonia.org.sdk.AppsService/GetApps": [
+    "/begonia.org.sdk.AppsService/Put": [
         {
             "Pattern": {},
             "Template": {
@@ -89,25 +80,22 @@
                     2,
                     1,
                     2,
-                    2,
-                    2,
-                    3
+                    2
                 ],
                 "Pool": [
                     "api",
                     "v1",
-                    "app",
-                    "list"
+                    "app"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/app/list"
+                "Template": "/api/v1/app"
             },
-            "HttpMethod": "GET",
-            "FullMethodName": "/begonia.org.sdk.AppsService/GetApps",
-            "HttpUri": "/api/v1/app/list",
+            "HttpMethod": "PUT",
+            "FullMethodName": "/begonia.org.sdk.AppsService/Put",
+            "HttpUri": "/api/v1/app",
             "PathParams": [],
-            "InName": "AppsListRequest",
+            "InName": "AddAppsRequest",
             "OutName": "APIResponse",
             "IsClientStream": false,
             "IsServerStream": false,

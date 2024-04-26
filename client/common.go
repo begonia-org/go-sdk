@@ -30,6 +30,7 @@ const ABORT_PART_API = "/api/v1/file/part/abort"
 const Download_API = "/api/v1/file"
 const Metadata_API = "/api/v1/file/metadata"
 const Download_PART_API = "/api/v1/file/part"
+const FILE_API = "/api/v1/file"
 
 func NewAPIClient(addr, accessKey, secretKey string) *BaseAPI {
 	return &BaseAPI{
@@ -44,9 +45,7 @@ func (bc *BaseAPI) requestSignature(_ context.Context, req *http.Request) error 
 	if err != nil {
 		return err
 	}
-	// log.Println("客户端开始签名")
 	err = bc.signer.SignRequest(gw)
-	// log.Println("客户端签名完成")
 	if err != nil {
 		return err
 	}
@@ -68,7 +67,7 @@ func (bc *BaseAPI) requestSignature(_ context.Context, req *http.Request) error 
 }
 func (bc *BaseAPI) Get(ctx context.Context, uri string, headers map[string]string) (*http.Response, error) {
 	api, _ := url.JoinPath(bc.baseUrl, uri)
-	api,_ = url.QueryUnescape(api)
+	// api, _ = url.QueryUnescape(api)
 	req := bc.buildRequest(ctx, http.MethodGet, api, headers, nil)
 	return bc.request(ctx, req)
 }
@@ -103,7 +102,13 @@ func (bc *BaseAPI) Patch(ctx context.Context, uri string, headers map[string]str
 
 	return bc.request(ctx, req)
 }
+func (bc *BaseAPI) Head(ctx context.Context, uri string, headers map[string]string) (*http.Response, error) {
+	api, _ := url.JoinPath(bc.baseUrl, uri)
+	req := bc.buildRequest(ctx, http.MethodHead, api, headers, nil)
+	return bc.request(ctx, req)
+}
 func (bc *BaseAPI) buildRequest(_ context.Context, method, uri string, headers map[string]string, payload io.Reader) *http.Request {
+	uri, _ = url.QueryUnescape(uri)
 	req, _ := http.NewRequest(method, uri, payload)
 	req.Header.Set("Accept", "application/json")
 	for k, v := range headers {
@@ -111,6 +116,7 @@ func (bc *BaseAPI) buildRequest(_ context.Context, method, uri string, headers m
 	}
 	return req
 }
+
 func (bc *BaseAPI) request(ctx context.Context, req *http.Request) (*http.Response, error) {
 	err := bc.requestSignature(ctx, req)
 	if err != nil {

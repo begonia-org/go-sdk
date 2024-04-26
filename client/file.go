@@ -9,8 +9,10 @@ import (
 	"io"
 	"math"
 	"net/http"
+	"net/url"
 	"os"
 	"sync"
+	"time"
 
 	api "github.com/begonia-org/go-sdk/api/v1"
 	common "github.com/begonia-org/go-sdk/common/api/v1"
@@ -35,6 +37,10 @@ type UploadPartAPIResponse struct {
 type UploadCompleteAPIResponse struct {
 	*Response
 	*api.CompleteMultipartUploadResponse
+}
+type FileMetadataAPIResponse struct {
+	*Response
+	*api.FileMetadataResponse
 }
 
 func NewFilesAPI(addr, accessKey, secretKey string) *FilesAPI {
@@ -253,7 +259,14 @@ func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key
 }
 
 func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, version string) (string, error) {
-	uri := fmt.Sprintf("%s?key=%s", Download_API, key)
+	// uri := fmt.Sprintf("%s?key=%s&version=%s", Download_API, key, version)
+	values := url.Values{}
+	values.Add("key", key)
+	if version != "" {
+		values.Add("version", version)
+
+	}
+	uri := fmt.Sprintf("%s?%s", Download_API, values.Encode())
 	headers := make(map[string]string)
 	headers["accept"] = "application/octet-stream"
 	rsp, err := f.Get(ctx, uri, headers)
@@ -282,4 +295,132 @@ func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, ver
 		return sha256Str, nil
 	}
 	return "", fmt.Errorf("Failed to download file")
+}
+
+func (f *FilesAPI) RangeDownload(ctx context.Context, key string, version string, start, end int64) ([]byte, error) {
+	values := url.Values{}
+	values.Add("key", key)
+	if version != "" {
+		values.Add("version", version)
+
+	}
+	uri := fmt.Sprintf("%s?%s", Download_PART_API, values.Encode())
+	headers := make(map[string]string)
+	headers["accept"] = "application/octet-stream"
+	headers["range"] = fmt.Sprintf("bytes=%d-%d", start, end)
+	rsp, err := f.Get(ctx, uri, headers)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to send request: %w", err)
+	}
+	buf := new(bytes.Buffer)
+	if rsp != nil {
+		if rsp.StatusCode >= http.StatusBadRequest {
+			err := "unknown error"
+			if rsp.StatusCode == http.StatusNotFound {
+				err = "file not found"
+			}
+			return nil, fmt.Errorf("Failed to download file: %s,with status code %d", err, rsp.StatusCode)
+		}
+		defer rsp.Body.Close()
+		_, err := io.Copy(buf, rsp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to read response: %w", err)
+		}
+		return buf.Bytes(), nil
+	}
+	return nil, fmt.Errorf("Failed to download file")
+}
+func (f *FilesAPI) Metadata(ctx context.Context, key string, version string) (*FileMetadataAPIResponse, error) {
+	// uri := fmt.Sprintf("%s?key=%s&version=%s", Download_API, key, version)
+	values := url.Values{}
+	values.Add("key", key)
+	if version != "" {
+		values.Add("version", version)
+
+	}
+	uri := fmt.Sprintf("%s?%s", Metadata_API, values.Encode())
+	rsp, err := f.Head(ctx, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	if rsp != nil {
+		if rsp.StatusCode != http.StatusOK {
+			err := "unknown error"
+			if rsp.StatusCode == http.StatusNotFound {
+				err = "file not found"
+			}
+			return nil, fmt.Errorf("Failed to get file metadata: %s", err)
+		}
+		defer rsp.Body.Close()
+
+		modfiyTime, _ := time.Parse(time.RFC1123, rsp.Header.Get("Last-Modified"))
+
+		apiRsp := &api.FileMetadataResponse{
+			Name:        rsp.Header.Get("X-File-Name"),
+			ContentType: rsp.Header.Get("content-type"),
+			Etag:        rsp.Header.Get("Etag"),
+			ModifyTime:  modfiyTime.Unix(),
+			Sha256:      rsp.Header.Get("X-File-Sha256"),
+			Size:        rsp.ContentLength,
+			Key:         key,
+			Version:     rsp.Header.Get("X-File-Version"),
+		}
+		return &FileMetadataAPIResponse{
+			Response:             &Response{StatusCode: rsp.StatusCode, RequestId: rsp.Header.Get("X-Request-Id")},
+			FileMetadataResponse: apiRsp,
+		}, nil
+	}
+	return nil, fmt.Errorf("Failed to get file metadata")
+}
+func (f *FilesAPI) DownloadMultiParts(ctx context.Context, key string, dst string, version string) (*FileMetadataAPIResponse, error) {
+	metadata, err := f.Metadata(ctx, key, version)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to get file metadata: %w", err)
+	}
+	if metadata == nil {
+		return nil, fmt.Errorf("Failed to get file metadata")
+	}
+	partSize := int64(2 * 1024 * 1024)
+	partCount := math.Ceil(float64(metadata.Size) / float64(partSize))
+	file, err := os.Create(dst)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create file: %w", err)
+	}
+	defer file.Close()
+	for i := 0; i < int(partCount); i++ {
+		rangeStartAt := int64(i) * partSize
+		rangeEndAt := rangeStartAt + partSize - 1
+		if rangeEndAt > metadata.Size {
+			rangeEndAt = metadata.Size -1
+		}
+		data, err := f.RangeDownload(ctx, key, version, rangeStartAt, rangeEndAt)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to download part: %w", err)
+		}
+		_, err = file.WriteAt(data, rangeStartAt)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to write data to file: %w", err)
+		}
+
+	}
+	return metadata, nil
+}
+
+func (f *FilesAPI)DeleteFile(ctx context.Context,key string) (*Response,error){
+	values := url.Values{}
+	values.Add("key", key)
+	uri := fmt.Sprintf("%s?%s", FILE_API, values.Encode())
+	rsp,err := f.Delete(ctx,uri,nil,nil)
+	if err != nil {
+		return nil,err
+	}
+	if rsp != nil {
+		apiRsp := &api.DeleteResponse{}
+		resp, err := f.unmarshal(rsp, apiRsp)
+		if err != nil {
+			return nil, err
+		}
+		return resp,nil
+	}
+	return nil,fmt.Errorf("Failed to delete file")
 }
