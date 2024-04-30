@@ -1,0 +1,222 @@
+{
+    "/begonia.org.go.access.control.api.v1.ABACService/Auth": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "abac",
+                    "authz"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/abac/authz"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.go.access.control.api.v1.ABACService/Auth",
+            "HttpUri": "/v1/abac/authz",
+            "PathParams": [],
+            "InName": "AccessContext",
+            "OutName": "AccessResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.go.access.control.api.v1",
+            "InPkg": "begonia.org.go.access.control.api.v1",
+            "OutPkg": "begonia.org.go.access.control.api.v1"
+        }
+    ],
+    "/begonia.org.go.access.control.api.v1.ABACService/Delete": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "policy",
+                    "unique_key"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "unique_key"
+                ],
+                "Template": "/v1/policy/{unique_key}"
+            },
+            "HttpMethod": "DELETE",
+            "FullMethodName": "/begonia.org.go.access.control.api.v1.ABACService/Delete",
+            "HttpUri": "/v1/policy/{unique_key}",
+            "PathParams": [
+                "unique_key"
+            ],
+            "InName": "PolicyRequest",
+            "OutName": "Policy",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.go.access.control.api.v1",
+            "InPkg": "begonia.org.go.access.control.api.v1",
+            "OutPkg": "begonia.org.go.access.control.api.v1"
+        }
+    ],
+    "/begonia.org.go.access.control.api.v1.ABACService/Get": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "policy",
+                    "unique_key"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "unique_key"
+                ],
+                "Template": "/v1/policy/{unique_key}"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.go.access.control.api.v1.ABACService/Get",
+            "HttpUri": "/v1/policy/{unique_key}",
+            "PathParams": [
+                "unique_key"
+            ],
+            "InName": "PolicyRequest",
+            "OutName": "Policy",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.go.access.control.api.v1",
+            "InPkg": "begonia.org.go.access.control.api.v1",
+            "OutPkg": "begonia.org.go.access.control.api.v1"
+        }
+    ],
+    "/begonia.org.go.access.control.api.v1.ABACService/List": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "policy",
+                    "list"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/policy/list"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.go.access.control.api.v1.ABACService/List",
+            "HttpUri": "/v1/policy/list",
+            "PathParams": [],
+            "InName": "Policy",
+            "OutName": "Policy",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.go.access.control.api.v1",
+            "InPkg": "begonia.org.go.access.control.api.v1",
+            "OutPkg": "begonia.org.go.access.control.api.v1"
+        }
+    ],
+    "/begonia.org.go.access.control.api.v1.ABACService/Patch": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1
+                ],
+                "Pool": [
+                    "v1",
+                    "policy"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/policy"
+            },
+            "HttpMethod": "PATCH",
+            "FullMethodName": "/begonia.org.go.access.control.api.v1.ABACService/Patch",
+            "HttpUri": "/v1/policy",
+            "PathParams": [],
+            "InName": "Policy",
+            "OutName": "Policy",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.go.access.control.api.v1",
+            "InPkg": "begonia.org.go.access.control.api.v1",
+            "OutPkg": "begonia.org.go.access.control.api.v1"
+        }
+    ],
+    "/begonia.org.go.access.control.api.v1.ABACService/Put": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1
+                ],
+                "Pool": [
+                    "v1",
+                    "policy"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/policy"
+            },
+            "HttpMethod": "PUT",
+            "FullMethodName": "/begonia.org.go.access.control.api.v1.ABACService/Put",
+            "HttpUri": "/v1/policy",
+            "PathParams": [],
+            "InName": "Policy",
+            "OutName": "Policy",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.go.access.control.api.v1",
+            "InPkg": "begonia.org.go.access.control.api.v1",
+            "OutPkg": "begonia.org.go.access.control.api.v1"
+        }
+    ]
+}

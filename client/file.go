@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	api "github.com/begonia-org/go-sdk/api/v1"
+	api "github.com/begonia-org/go-sdk/api/file/v1"
 	common "github.com/begonia-org/go-sdk/common/api/v1"
 )
 

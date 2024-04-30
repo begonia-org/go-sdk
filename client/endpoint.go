@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	api "github.com/begonia-org/go-sdk/api/v1"
+	api "github.com/begonia-org/go-sdk/api/endpoint/v1"
 	common "github.com/begonia-org/go-sdk/common/api/v1"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/reflect/protoreflect"

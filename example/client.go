@@ -5,7 +5,7 @@ import (
 	"io"
 	"time"
 
-	v1 "github.com/begonia-org/go-sdk/api/v1"
+	v1 "github.com/begonia-org/go-sdk/api/example/v1"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	api "github.com/begonia-org/go-sdk/api/v1"
+	api "github.com/begonia-org/go-sdk/api/plugin/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

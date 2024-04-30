@@ -1,0 +1,72 @@
+{
+    "/begonia.org.sdk.PluginService/Call": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "plugin",
+                    "call"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/plugin/call"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.PluginService/Call",
+            "HttpUri": "/v1/plugin/call",
+            "PathParams": [],
+            "InName": "PluginRequest",
+            "OutName": "PluginResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.PluginService/GetPluginInfo": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "plugin",
+                    "info"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/plugin/info"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.PluginService/GetPluginInfo",
+            "HttpUri": "/v1/plugin/info",
+            "PathParams": [],
+            "InName": "Empty",
+            "OutName": "PluginInfo",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "google.protobuf",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ]
+}

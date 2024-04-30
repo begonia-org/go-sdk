@@ -1,0 +1,202 @@
+{
+    "/begonia.org.sdk.EndpointService/Config": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "endpoint"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/endpoint"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/Config",
+            "HttpUri": "/api/v1/endpoint",
+            "PathParams": [],
+            "InName": "EndpointSrvConfig",
+            "OutName": "AddEndpointResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.EndpointService/Delete": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "endpoint",
+                    "unique_key"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "unique_key"
+                ],
+                "Template": "/api/v1/endpoint/{unique_key}"
+            },
+            "HttpMethod": "DELETE",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/Delete",
+            "HttpUri": "/api/v1/endpoint/{unique_key}",
+            "PathParams": [
+                "unique_key"
+            ],
+            "InName": "DeleteEndpointRequest",
+            "OutName": "DeleteEndpointResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.EndpointService/Details": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "endpoint",
+                    "unique_key"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "unique_key"
+                ],
+                "Template": "/api/v1/endpoint/{unique_key}"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/Details",
+            "HttpUri": "/api/v1/endpoint/{unique_key}",
+            "PathParams": [
+                "unique_key"
+            ],
+            "InName": "DetailsEndpointRequest",
+            "OutName": "DetailsEndpointResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.EndpointService/List": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "endpoint",
+                    "batch"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/endpoint/batch"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/List",
+            "HttpUri": "/api/v1/endpoint/batch",
+            "PathParams": [],
+            "InName": "ListEndpointRequest",
+            "OutName": "ListEndpointResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.EndpointService/Update": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "endpoint"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/endpoint"
+            },
+            "HttpMethod": "PATCH",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/Update",
+            "HttpUri": "/api/v1/endpoint",
+            "PathParams": [],
+            "InName": "EndpointSrvUpdateRequest",
+            "OutName": "UpdateEndpointResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ]
+}

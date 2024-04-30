@@ -6,7 +6,7 @@ import (
 	"io"
 	"net"
 
-	v1 "github.com/begonia-org/go-sdk/api/v1"
+	v1 "github.com/begonia-org/go-sdk/api/example/v1"
 	"google.golang.org/grpc"
 )
 

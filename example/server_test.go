@@ -3,7 +3,7 @@ package example
 import (
 	"testing"
 
-	api "github.com/begonia-org/go-sdk/api/v1"
+	api "github.com/begonia-org/go-sdk/api/example/v1"
 	"google.golang.org/protobuf/proto"
 )
 
