@@ -1,0 +1,192 @@
+{
+    "/begonia.org.sdk.AuthService/Account": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "account"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/auth/account"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.AuthService/Account",
+            "HttpUri": "/api/v1/auth/account",
+            "PathParams": [],
+            "InName": "AccountAPIRequest",
+            "OutName": "AccountAPIResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.AuthService/AuthSeed": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "log"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/auth/log"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.AuthService/AuthSeed",
+            "HttpUri": "/api/v1/auth/log",
+            "PathParams": [],
+            "InName": "AuthLogAPIRequest",
+            "OutName": "AuthLogAPIResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.AuthService/Login": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/auth/login"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.AuthService/Login",
+            "HttpUri": "/api/v1/auth/login",
+            "PathParams": [],
+            "InName": "LoginAPIRequest",
+            "OutName": "LoginAPIResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.AuthService/Logout": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "logout"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/auth/logout"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.AuthService/Logout",
+            "HttpUri": "/api/v1/auth/logout",
+            "PathParams": [],
+            "InName": "LogoutAPIRequest",
+            "OutName": "LogoutAPIResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.AuthService/Regsiter": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "regsiter"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/auth/regsiter"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.AuthService/Regsiter",
+            "HttpUri": "/api/v1/auth/regsiter",
+            "PathParams": [],
+            "InName": "RegsiterAPIRequest",
+            "OutName": "RegsiterAPIResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ]
+}
