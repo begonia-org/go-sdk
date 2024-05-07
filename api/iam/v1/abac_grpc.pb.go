@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ABACService_Auth_FullMethodName   = "/begonia.org.go.access.control.api.v1.ABACService/Auth"
-	ABACService_Put_FullMethodName    = "/begonia.org.go.access.control.api.v1.ABACService/Put"
-	ABACService_Patch_FullMethodName  = "/begonia.org.go.access.control.api.v1.ABACService/Patch"
-	ABACService_Delete_FullMethodName = "/begonia.org.go.access.control.api.v1.ABACService/Delete"
-	ABACService_Get_FullMethodName    = "/begonia.org.go.access.control.api.v1.ABACService/Get"
-	ABACService_List_FullMethodName   = "/begonia.org.go.access.control.api.v1.ABACService/List"
+	ABACService_Auth_FullMethodName         = "/begonia.org.go.access.control.api.v1.ABACService/Auth"
+	ABACService_PolicyPut_FullMethodName    = "/begonia.org.go.access.control.api.v1.ABACService/PolicyPut"
+	ABACService_PolicyPatch_FullMethodName  = "/begonia.org.go.access.control.api.v1.ABACService/PolicyPatch"
+	ABACService_PolicyDelete_FullMethodName = "/begonia.org.go.access.control.api.v1.ABACService/PolicyDelete"
+	ABACService_PolicyGet_FullMethodName    = "/begonia.org.go.access.control.api.v1.ABACService/PolicyGet"
+	ABACService_PolicyList_FullMethodName   = "/begonia.org.go.access.control.api.v1.ABACService/PolicyList"
 )
 
 // ABACServiceClient is the client API for ABACService service.
@@ -32,11 +32,11 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ABACServiceClient interface {
 	Auth(ctx context.Context, in *AccessContext, opts ...grpc.CallOption) (*AccessResponse, error)
-	Put(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error)
-	Patch(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error)
-	Delete(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error)
-	Get(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error)
-	List(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error)
+	PolicyPut(ctx context.Context, in *PutPolicyRequest, opts ...grpc.CallOption) (*PutPolicyResponse, error)
+	PolicyPatch(ctx context.Context, in *PutPolicyRequest, opts ...grpc.CallOption) (*PatchPolicyResponse, error)
+	PolicyDelete(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error)
+	PolicyGet(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error)
+	PolicyList(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error)
 }
 
 type aBACServiceClient struct {
@@ -56,45 +56,45 @@ func (c *aBACServiceClient) Auth(ctx context.Context, in *AccessContext, opts ..
 	return out, nil
 }
 
-func (c *aBACServiceClient) Put(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error) {
-	out := new(Policy)
-	err := c.cc.Invoke(ctx, ABACService_Put_FullMethodName, in, out, opts...)
+func (c *aBACServiceClient) PolicyPut(ctx context.Context, in *PutPolicyRequest, opts ...grpc.CallOption) (*PutPolicyResponse, error) {
+	out := new(PutPolicyResponse)
+	err := c.cc.Invoke(ctx, ABACService_PolicyPut_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aBACServiceClient) Patch(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error) {
-	out := new(Policy)
-	err := c.cc.Invoke(ctx, ABACService_Patch_FullMethodName, in, out, opts...)
+func (c *aBACServiceClient) PolicyPatch(ctx context.Context, in *PutPolicyRequest, opts ...grpc.CallOption) (*PatchPolicyResponse, error) {
+	out := new(PatchPolicyResponse)
+	err := c.cc.Invoke(ctx, ABACService_PolicyPatch_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aBACServiceClient) Delete(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error) {
+func (c *aBACServiceClient) PolicyDelete(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error) {
 	out := new(Policy)
-	err := c.cc.Invoke(ctx, ABACService_Delete_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ABACService_PolicyDelete_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aBACServiceClient) Get(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error) {
+func (c *aBACServiceClient) PolicyGet(ctx context.Context, in *PolicyRequest, opts ...grpc.CallOption) (*Policy, error) {
 	out := new(Policy)
-	err := c.cc.Invoke(ctx, ABACService_Get_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ABACService_PolicyGet_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aBACServiceClient) List(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error) {
+func (c *aBACServiceClient) PolicyList(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*Policy, error) {
 	out := new(Policy)
-	err := c.cc.Invoke(ctx, ABACService_List_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, ABACService_PolicyList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -106,11 +106,11 @@ func (c *aBACServiceClient) List(ctx context.Context, in *Policy, opts ...grpc.C
 // for forward compatibility
 type ABACServiceServer interface {
 	Auth(context.Context, *AccessContext) (*AccessResponse, error)
-	Put(context.Context, *Policy) (*Policy, error)
-	Patch(context.Context, *Policy) (*Policy, error)
-	Delete(context.Context, *PolicyRequest) (*Policy, error)
-	Get(context.Context, *PolicyRequest) (*Policy, error)
-	List(context.Context, *Policy) (*Policy, error)
+	PolicyPut(context.Context, *PutPolicyRequest) (*PutPolicyResponse, error)
+	PolicyPatch(context.Context, *PutPolicyRequest) (*PatchPolicyResponse, error)
+	PolicyDelete(context.Context, *PolicyRequest) (*Policy, error)
+	PolicyGet(context.Context, *PolicyRequest) (*Policy, error)
+	PolicyList(context.Context, *Policy) (*Policy, error)
 	mustEmbedUnimplementedABACServiceServer()
 }
 
@@ -121,20 +121,20 @@ type UnimplementedABACServiceServer struct {
 func (UnimplementedABACServiceServer) Auth(context.Context, *AccessContext) (*AccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
 }
-func (UnimplementedABACServiceServer) Put(context.Context, *Policy) (*Policy, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Put not implemented")
+func (UnimplementedABACServiceServer) PolicyPut(context.Context, *PutPolicyRequest) (*PutPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyPut not implemented")
 }
-func (UnimplementedABACServiceServer) Patch(context.Context, *Policy) (*Policy, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Patch not implemented")
+func (UnimplementedABACServiceServer) PolicyPatch(context.Context, *PutPolicyRequest) (*PatchPolicyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyPatch not implemented")
 }
-func (UnimplementedABACServiceServer) Delete(context.Context, *PolicyRequest) (*Policy, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (UnimplementedABACServiceServer) PolicyDelete(context.Context, *PolicyRequest) (*Policy, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyDelete not implemented")
 }
-func (UnimplementedABACServiceServer) Get(context.Context, *PolicyRequest) (*Policy, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+func (UnimplementedABACServiceServer) PolicyGet(context.Context, *PolicyRequest) (*Policy, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyGet not implemented")
 }
-func (UnimplementedABACServiceServer) List(context.Context, *Policy) (*Policy, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+func (UnimplementedABACServiceServer) PolicyList(context.Context, *Policy) (*Policy, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyList not implemented")
 }
 func (UnimplementedABACServiceServer) mustEmbedUnimplementedABACServiceServer() {}
 
@@ -167,92 +167,92 @@ func _ABACService_Auth_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ABACService_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Policy)
+func _ABACService_PolicyPut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutPolicyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ABACServiceServer).Put(ctx, in)
+		return srv.(ABACServiceServer).PolicyPut(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ABACService_Put_FullMethodName,
+		FullMethod: ABACService_PolicyPut_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ABACServiceServer).Put(ctx, req.(*Policy))
+		return srv.(ABACServiceServer).PolicyPut(ctx, req.(*PutPolicyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ABACService_Patch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Policy)
+func _ABACService_PolicyPatch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutPolicyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ABACServiceServer).Patch(ctx, in)
+		return srv.(ABACServiceServer).PolicyPatch(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ABACService_Patch_FullMethodName,
+		FullMethod: ABACService_PolicyPatch_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ABACServiceServer).Patch(ctx, req.(*Policy))
+		return srv.(ABACServiceServer).PolicyPatch(ctx, req.(*PutPolicyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ABACService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ABACService_PolicyDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PolicyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ABACServiceServer).Delete(ctx, in)
+		return srv.(ABACServiceServer).PolicyDelete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ABACService_Delete_FullMethodName,
+		FullMethod: ABACService_PolicyDelete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ABACServiceServer).Delete(ctx, req.(*PolicyRequest))
+		return srv.(ABACServiceServer).PolicyDelete(ctx, req.(*PolicyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ABACService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ABACService_PolicyGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PolicyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ABACServiceServer).Get(ctx, in)
+		return srv.(ABACServiceServer).PolicyGet(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ABACService_Get_FullMethodName,
+		FullMethod: ABACService_PolicyGet_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ABACServiceServer).Get(ctx, req.(*PolicyRequest))
+		return srv.(ABACServiceServer).PolicyGet(ctx, req.(*PolicyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ABACService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ABACService_PolicyList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Policy)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ABACServiceServer).List(ctx, in)
+		return srv.(ABACServiceServer).PolicyList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ABACService_List_FullMethodName,
+		FullMethod: ABACService_PolicyList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ABACServiceServer).List(ctx, req.(*Policy))
+		return srv.(ABACServiceServer).PolicyList(ctx, req.(*Policy))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -269,24 +269,24 @@ var ABACService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ABACService_Auth_Handler,
 		},
 		{
-			MethodName: "Put",
-			Handler:    _ABACService_Put_Handler,
+			MethodName: "PolicyPut",
+			Handler:    _ABACService_PolicyPut_Handler,
 		},
 		{
-			MethodName: "Patch",
-			Handler:    _ABACService_Patch_Handler,
+			MethodName: "PolicyPatch",
+			Handler:    _ABACService_PolicyPatch_Handler,
 		},
 		{
-			MethodName: "Delete",
-			Handler:    _ABACService_Delete_Handler,
+			MethodName: "PolicyDelete",
+			Handler:    _ABACService_PolicyDelete_Handler,
 		},
 		{
-			MethodName: "Get",
-			Handler:    _ABACService_Get_Handler,
+			MethodName: "PolicyGet",
+			Handler:    _ABACService_PolicyGet_Handler,
 		},
 		{
-			MethodName: "List",
-			Handler:    _ABACService_List_Handler,
+			MethodName: "PolicyList",
+			Handler:    _ABACService_PolicyList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

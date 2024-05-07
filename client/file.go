@@ -74,7 +74,7 @@ func (f *FilesAPI) UploadFile(ctx context.Context, srcPath string, dst string, u
 
 	}
 
-	rsp, err := f.Put(ctx, UPLOAD_API, nil, bytes.NewReader(payload))
+	rsp, err := f.Post(ctx, UPLOAD_API, nil, bytes.NewReader(payload))
 	if err != nil {
 		return nil, fmt.Errorf("Failed to send request: %w", err)
 
@@ -130,7 +130,7 @@ func (f *FilesAPI) UploadPart(ctx context.Context, data []byte, key string, part
 	var err error
 	defer func(ctx context.Context) {
 		if err != nil {
-			f.AbortUpload(ctx, uploadId)
+			_,_=f.AbortUpload(ctx, uploadId)
 		}
 	}(ctx)
 	payload, err := json.Marshal(&content)

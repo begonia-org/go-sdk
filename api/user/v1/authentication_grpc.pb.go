@@ -21,9 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	AuthService_Login_FullMethodName    = "/begonia.org.sdk.AuthService/Login"
 	AuthService_Logout_FullMethodName   = "/begonia.org.sdk.AuthService/Logout"
-	AuthService_Account_FullMethodName  = "/begonia.org.sdk.AuthService/Account"
 	AuthService_AuthSeed_FullMethodName = "/begonia.org.sdk.AuthService/AuthSeed"
-	AuthService_Regsiter_FullMethodName = "/begonia.org.sdk.AuthService/Regsiter"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -32,9 +30,7 @@ const (
 type AuthServiceClient interface {
 	Login(ctx context.Context, in *LoginAPIRequest, opts ...grpc.CallOption) (*LoginAPIResponse, error)
 	Logout(ctx context.Context, in *LogoutAPIRequest, opts ...grpc.CallOption) (*LogoutAPIResponse, error)
-	Account(ctx context.Context, in *AccountAPIRequest, opts ...grpc.CallOption) (*AccountAPIResponse, error)
 	AuthSeed(ctx context.Context, in *AuthLogAPIRequest, opts ...grpc.CallOption) (*AuthLogAPIResponse, error)
-	Regsiter(ctx context.Context, in *RegsiterAPIRequest, opts ...grpc.CallOption) (*RegsiterAPIResponse, error)
 }
 
 type authServiceClient struct {
@@ -63,27 +59,9 @@ func (c *authServiceClient) Logout(ctx context.Context, in *LogoutAPIRequest, op
 	return out, nil
 }
 
-func (c *authServiceClient) Account(ctx context.Context, in *AccountAPIRequest, opts ...grpc.CallOption) (*AccountAPIResponse, error) {
-	out := new(AccountAPIResponse)
-	err := c.cc.Invoke(ctx, AuthService_Account_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *authServiceClient) AuthSeed(ctx context.Context, in *AuthLogAPIRequest, opts ...grpc.CallOption) (*AuthLogAPIResponse, error) {
 	out := new(AuthLogAPIResponse)
 	err := c.cc.Invoke(ctx, AuthService_AuthSeed_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) Regsiter(ctx context.Context, in *RegsiterAPIRequest, opts ...grpc.CallOption) (*RegsiterAPIResponse, error) {
-	out := new(RegsiterAPIResponse)
-	err := c.cc.Invoke(ctx, AuthService_Regsiter_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,9 +74,7 @@ func (c *authServiceClient) Regsiter(ctx context.Context, in *RegsiterAPIRequest
 type AuthServiceServer interface {
 	Login(context.Context, *LoginAPIRequest) (*LoginAPIResponse, error)
 	Logout(context.Context, *LogoutAPIRequest) (*LogoutAPIResponse, error)
-	Account(context.Context, *AccountAPIRequest) (*AccountAPIResponse, error)
 	AuthSeed(context.Context, *AuthLogAPIRequest) (*AuthLogAPIResponse, error)
-	Regsiter(context.Context, *RegsiterAPIRequest) (*RegsiterAPIResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -112,14 +88,8 @@ func (UnimplementedAuthServiceServer) Login(context.Context, *LoginAPIRequest) (
 func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutAPIRequest) (*LogoutAPIResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedAuthServiceServer) Account(context.Context, *AccountAPIRequest) (*AccountAPIResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Account not implemented")
-}
 func (UnimplementedAuthServiceServer) AuthSeed(context.Context, *AuthLogAPIRequest) (*AuthLogAPIResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthSeed not implemented")
-}
-func (UnimplementedAuthServiceServer) Regsiter(context.Context, *RegsiterAPIRequest) (*RegsiterAPIResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Regsiter not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -170,24 +140,6 @@ func _AuthService_Logout_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_Account_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountAPIRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).Account(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_Account_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Account(ctx, req.(*AccountAPIRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AuthService_AuthSeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AuthLogAPIRequest)
 	if err := dec(in); err != nil {
@@ -202,24 +154,6 @@ func _AuthService_AuthSeed_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).AuthSeed(ctx, req.(*AuthLogAPIRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_Regsiter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegsiterAPIRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).Regsiter(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_Regsiter_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Regsiter(ctx, req.(*RegsiterAPIRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -240,16 +174,8 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_Logout_Handler,
 		},
 		{
-			MethodName: "Account",
-			Handler:    _AuthService_Account_Handler,
-		},
-		{
 			MethodName: "AuthSeed",
 			Handler:    _AuthService_AuthSeed_Handler,
-		},
-		{
-			MethodName: "Regsiter",
-			Handler:    _AuthService_Regsiter_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

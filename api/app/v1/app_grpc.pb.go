@@ -8,7 +8,6 @@ package v1
 
 import (
 	context "context"
-	v1 "github.com/begonia-org/go-sdk/common/api/v1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -20,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AppsService_Put_FullMethodName   = "/begonia.org.sdk.AppsService/Put"
-	AppsService_Patch_FullMethodName = "/begonia.org.sdk.AppsService/Patch"
-	AppsService_Get_FullMethodName   = "/begonia.org.sdk.AppsService/Get"
+	AppsService_Put_FullMethodName    = "/begonia.org.sdk.AppsService/Put"
+	AppsService_Patch_FullMethodName  = "/begonia.org.sdk.AppsService/Patch"
+	AppsService_Get_FullMethodName    = "/begonia.org.sdk.AppsService/Get"
+	AppsService_Delete_FullMethodName = "/begonia.org.sdk.AppsService/Delete"
+	AppsService_List_FullMethodName   = "/begonia.org.sdk.AppsService/List"
 )
 
 // AppsServiceClient is the client API for AppsService service.
@@ -30,10 +31,12 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AppsServiceClient interface {
 	// @gotags: doc:"添加app服务"
-	Put(ctx context.Context, in *AddAppsRequest, opts ...grpc.CallOption) (*v1.APIResponse, error)
-	Patch(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error)
+	Put(ctx context.Context, in *AppsRequest, opts ...grpc.CallOption) (*AddAppResponse, error)
+	Patch(ctx context.Context, in *AppsRequest, opts ...grpc.CallOption) (*Apps, error)
 	// @gotags: doc:"获取app服务"
-	Get(ctx context.Context, in *AppsListRequest, opts ...grpc.CallOption) (*v1.APIResponse, error)
+	Get(ctx context.Context, in *GetAPPRequest, opts ...grpc.CallOption) (*Apps, error)
+	Delete(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*DeleteAppResponse, error)
+	List(ctx context.Context, in *AppsListRequest, opts ...grpc.CallOption) (*AppsListResponse, error)
 }
 
 type appsServiceClient struct {
@@ -44,8 +47,8 @@ func NewAppsServiceClient(cc grpc.ClientConnInterface) AppsServiceClient {
 	return &appsServiceClient{cc}
 }
 
-func (c *appsServiceClient) Put(ctx context.Context, in *AddAppsRequest, opts ...grpc.CallOption) (*v1.APIResponse, error) {
-	out := new(v1.APIResponse)
+func (c *appsServiceClient) Put(ctx context.Context, in *AppsRequest, opts ...grpc.CallOption) (*AddAppResponse, error) {
+	out := new(AddAppResponse)
 	err := c.cc.Invoke(ctx, AppsService_Put_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -53,8 +56,8 @@ func (c *appsServiceClient) Put(ctx context.Context, in *AddAppsRequest, opts ..
 	return out, nil
 }
 
-func (c *appsServiceClient) Patch(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*CreateAppResponse, error) {
-	out := new(CreateAppResponse)
+func (c *appsServiceClient) Patch(ctx context.Context, in *AppsRequest, opts ...grpc.CallOption) (*Apps, error) {
+	out := new(Apps)
 	err := c.cc.Invoke(ctx, AppsService_Patch_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -62,9 +65,27 @@ func (c *appsServiceClient) Patch(ctx context.Context, in *CreateAppRequest, opt
 	return out, nil
 }
 
-func (c *appsServiceClient) Get(ctx context.Context, in *AppsListRequest, opts ...grpc.CallOption) (*v1.APIResponse, error) {
-	out := new(v1.APIResponse)
+func (c *appsServiceClient) Get(ctx context.Context, in *GetAPPRequest, opts ...grpc.CallOption) (*Apps, error) {
+	out := new(Apps)
 	err := c.cc.Invoke(ctx, AppsService_Get_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *appsServiceClient) Delete(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*DeleteAppResponse, error) {
+	out := new(DeleteAppResponse)
+	err := c.cc.Invoke(ctx, AppsService_Delete_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *appsServiceClient) List(ctx context.Context, in *AppsListRequest, opts ...grpc.CallOption) (*AppsListResponse, error) {
+	out := new(AppsListResponse)
+	err := c.cc.Invoke(ctx, AppsService_List_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,10 +97,12 @@ func (c *appsServiceClient) Get(ctx context.Context, in *AppsListRequest, opts .
 // for forward compatibility
 type AppsServiceServer interface {
 	// @gotags: doc:"添加app服务"
-	Put(context.Context, *AddAppsRequest) (*v1.APIResponse, error)
-	Patch(context.Context, *CreateAppRequest) (*CreateAppResponse, error)
+	Put(context.Context, *AppsRequest) (*AddAppResponse, error)
+	Patch(context.Context, *AppsRequest) (*Apps, error)
 	// @gotags: doc:"获取app服务"
-	Get(context.Context, *AppsListRequest) (*v1.APIResponse, error)
+	Get(context.Context, *GetAPPRequest) (*Apps, error)
+	Delete(context.Context, *DeleteAppRequest) (*DeleteAppResponse, error)
+	List(context.Context, *AppsListRequest) (*AppsListResponse, error)
 	mustEmbedUnimplementedAppsServiceServer()
 }
 
@@ -87,14 +110,20 @@ type AppsServiceServer interface {
 type UnimplementedAppsServiceServer struct {
 }
 
-func (UnimplementedAppsServiceServer) Put(context.Context, *AddAppsRequest) (*v1.APIResponse, error) {
+func (UnimplementedAppsServiceServer) Put(context.Context, *AppsRequest) (*AddAppResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Put not implemented")
 }
-func (UnimplementedAppsServiceServer) Patch(context.Context, *CreateAppRequest) (*CreateAppResponse, error) {
+func (UnimplementedAppsServiceServer) Patch(context.Context, *AppsRequest) (*Apps, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Patch not implemented")
 }
-func (UnimplementedAppsServiceServer) Get(context.Context, *AppsListRequest) (*v1.APIResponse, error) {
+func (UnimplementedAppsServiceServer) Get(context.Context, *GetAPPRequest) (*Apps, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedAppsServiceServer) Delete(context.Context, *DeleteAppRequest) (*DeleteAppResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedAppsServiceServer) List(context.Context, *AppsListRequest) (*AppsListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedAppsServiceServer) mustEmbedUnimplementedAppsServiceServer() {}
 
@@ -110,7 +139,7 @@ func RegisterAppsServiceServer(s grpc.ServiceRegistrar, srv AppsServiceServer) {
 }
 
 func _AppsService_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddAppsRequest)
+	in := new(AppsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -122,13 +151,13 @@ func _AppsService_Put_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: AppsService_Put_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppsServiceServer).Put(ctx, req.(*AddAppsRequest))
+		return srv.(AppsServiceServer).Put(ctx, req.(*AppsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AppsService_Patch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAppRequest)
+	in := new(AppsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -140,13 +169,13 @@ func _AppsService_Patch_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: AppsService_Patch_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppsServiceServer).Patch(ctx, req.(*CreateAppRequest))
+		return srv.(AppsServiceServer).Patch(ctx, req.(*AppsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AppsService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AppsListRequest)
+	in := new(GetAPPRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -158,7 +187,43 @@ func _AppsService_Get_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: AppsService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppsServiceServer).Get(ctx, req.(*AppsListRequest))
+		return srv.(AppsServiceServer).Get(ctx, req.(*GetAPPRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AppsService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppsServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AppsService_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppsServiceServer).Delete(ctx, req.(*DeleteAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AppsService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AppsListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppsServiceServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AppsService_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppsServiceServer).List(ctx, req.(*AppsListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -181,6 +246,14 @@ var AppsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _AppsService_Get_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _AppsService_Delete_Handler,
+		},
+		{
+			MethodName: "List",
+			Handler:    _AppsService_List_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

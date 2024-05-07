@@ -290,7 +290,7 @@
                 "Fields": null,
                 "Template": "/api/v1/file"
             },
-            "HttpMethod": "PUT",
+            "HttpMethod": "POST",
             "FullMethodName": "/begonia.org.sdk.FileService/Upload",
             "HttpUri": "/api/v1/file",
             "PathParams": [],

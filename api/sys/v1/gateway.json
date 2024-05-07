@@ -1,0 +1,37 @@
+{
+    "/begonia.org.sdk.SystemService/Get": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "gateway",
+                    "info"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/gateway/info"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.SystemService/Get",
+            "HttpUri": "/v1/gateway/info",
+            "PathParams": [],
+            "InName": "InfoRequest",
+            "OutName": "InfoResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ]
+}

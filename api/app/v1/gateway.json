@@ -1,5 +1,97 @@
 {
+    "/begonia.org.sdk.AppsService/Delete": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "app",
+                    "appid"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "appid"
+                ],
+                "Template": "/api/v1/app/{appid}"
+            },
+            "HttpMethod": "DELETE",
+            "FullMethodName": "/begonia.org.sdk.AppsService/Delete",
+            "HttpUri": "/api/v1/app/{appid}",
+            "PathParams": [
+                "appid"
+            ],
+            "InName": "DeleteAppRequest",
+            "OutName": "DeleteAppResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
     "/begonia.org.sdk.AppsService/Get": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "app",
+                    "appid"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "appid"
+                ],
+                "Template": "/api/v1/app/{appid}"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.AppsService/Get",
+            "HttpUri": "/api/v1/app/{appid}",
+            "PathParams": [
+                "appid"
+            ],
+            "InName": "GetAPPRequest",
+            "OutName": "Apps",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.AppsService/List": [
         {
             "Pattern": {},
             "Template": {
@@ -15,23 +107,23 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "app"
+                    "apps"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/app"
+                "Template": "/api/v1/apps"
             },
             "HttpMethod": "GET",
-            "FullMethodName": "/begonia.org.sdk.AppsService/Get",
-            "HttpUri": "/api/v1/app",
+            "FullMethodName": "/begonia.org.sdk.AppsService/List",
+            "HttpUri": "/api/v1/apps",
             "PathParams": [],
             "InName": "AppsListRequest",
-            "OutName": "APIResponse",
+            "OutName": "AppsListResponse",
             "IsClientStream": false,
             "IsServerStream": false,
             "Pkg": "begonia.org.sdk",
             "InPkg": "begonia.org.sdk",
-            "OutPkg": "begonia.org.sdk.common"
+            "OutPkg": "begonia.org.sdk"
         }
     ],
     "/begonia.org.sdk.AppsService/Patch": [
@@ -60,8 +152,8 @@
             "FullMethodName": "/begonia.org.sdk.AppsService/Patch",
             "HttpUri": "/api/v1/app",
             "PathParams": [],
-            "InName": "CreateAppRequest",
-            "OutName": "CreateAppResponse",
+            "InName": "AppsRequest",
+            "OutName": "Apps",
             "IsClientStream": false,
             "IsServerStream": false,
             "Pkg": "begonia.org.sdk",
@@ -91,17 +183,17 @@
                 "Fields": null,
                 "Template": "/api/v1/app"
             },
-            "HttpMethod": "PUT",
+            "HttpMethod": "POST",
             "FullMethodName": "/begonia.org.sdk.AppsService/Put",
             "HttpUri": "/api/v1/app",
             "PathParams": [],
-            "InName": "AddAppsRequest",
-            "OutName": "APIResponse",
+            "InName": "AppsRequest",
+            "OutName": "AddAppResponse",
             "IsClientStream": false,
             "IsServerStream": false,
             "Pkg": "begonia.org.sdk",
             "InPkg": "begonia.org.sdk",
-            "OutPkg": "begonia.org.sdk.common"
+            "OutPkg": "begonia.org.sdk"
         }
     ]
 }
