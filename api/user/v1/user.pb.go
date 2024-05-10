@@ -209,14 +209,14 @@ type Users struct {
 
 	// @gotags: gorm:"primaryKey;autoIncrement;comment:自增id"
 	ID int64 `protobuf:"varint,1,opt,name=ID,proto3" json:"ID,omitempty" gorm:"primaryKey;autoIncrement;comment:自增id"`
-	// @gotags: json:"uid"  primary:"uid" gorm:"column:uid;type:varchar(36);unique;comment:uid"
-	Uid string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid" primary:"uid" gorm:"column:uid;type:varchar(36);unique;comment:uid"`
+	// @gotags: json:"uid"  primary:"uid" gorm:"column:uid;type:varchar(36);not null;unique;comment:uid"
+	Uid string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid" primary:"uid" gorm:"column:uid;type:varchar(36);not null;unique;comment:uid"`
 	// @gotags: json:"group" owner:"owner" gorm:"column:group;type:varchar(36);comment:group"
 	Owner string `protobuf:"bytes,13,opt,name=owner,proto3" json:"group" owner:"owner" gorm:"column:group;type:varchar(36);comment:group"`
 	// @gotags: json:"dept" gorm:"column:dept;type:varchar(36);comment:部门"
 	Dept string `protobuf:"bytes,14,opt,name=dept,proto3" json:"dept" gorm:"column:dept;type:varchar(36);comment:部门"`
-	// @gotags: json:"name" ondeleted:"rename" gorm:"column:name;type:varchar(128);unique;comment:username" aes:"true"
-	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name" ondeleted:"rename" gorm:"column:name;type:varchar(128);unique;comment:username" aes:"true"`
+	// @gotags: json:"name" ondeleted:"rename" gorm:"column:name;type:varchar(128);not null;unique;comment:username" aes:"true"
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name" ondeleted:"rename" gorm:"column:name;type:varchar(128);not null;unique;comment:username" aes:"true"`
 	// @gotags: json:"email" ondeleted:"rename" gorm:"column:email;type:varchar(128);not null;unique;comment:Users Email" aes:"true"
 	Email string `protobuf:"bytes,4,opt,name=email,proto3" json:"email" ondeleted:"rename" gorm:"column:email;type:varchar(128);not null;unique;comment:Users Email" aes:"true"`
 	// @gotags: doc:"phone number" ondeleted:"rename" gorm:"type:varchar(128);not null;unique;comment:Users Phone Number" aes:"true"
