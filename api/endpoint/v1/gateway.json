@@ -1,39 +1,4 @@
 {
-    "/begonia.org.sdk.EndpointService/Config": [
-        {
-            "Pattern": {},
-            "Template": {
-                "Version": 1,
-                "OpCodes": [
-                    2,
-                    0,
-                    2,
-                    1,
-                    2,
-                    2
-                ],
-                "Pool": [
-                    "api",
-                    "v1",
-                    "endpoint"
-                ],
-                "Verb": "",
-                "Fields": null,
-                "Template": "/api/v1/endpoint"
-            },
-            "HttpMethod": "POST",
-            "FullMethodName": "/begonia.org.sdk.EndpointService/Config",
-            "HttpUri": "/api/v1/endpoint",
-            "PathParams": [],
-            "InName": "EndpointSrvConfig",
-            "OutName": "AddEndpointResponse",
-            "IsClientStream": false,
-            "IsServerStream": false,
-            "Pkg": "begonia.org.sdk",
-            "InPkg": "begonia.org.sdk",
-            "OutPkg": "begonia.org.sdk"
-        }
-    ],
     "/begonia.org.sdk.EndpointService/Delete": [
         {
             "Pattern": {},
@@ -157,6 +122,41 @@
             "PathParams": [],
             "InName": "ListEndpointRequest",
             "OutName": "ListEndpointResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.EndpointService/Put": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "endpoint"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/endpoint"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/Put",
+            "HttpUri": "/api/v1/endpoint",
+            "PathParams": [],
+            "InName": "EndpointSrvConfig",
+            "OutName": "AddEndpointResponse",
             "IsClientStream": false,
             "IsServerStream": false,
             "Pkg": "begonia.org.sdk",

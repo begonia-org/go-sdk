@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	EndpointService_Config_FullMethodName  = "/begonia.org.sdk.EndpointService/Config"
+	EndpointService_Put_FullMethodName     = "/begonia.org.sdk.EndpointService/Put"
 	EndpointService_Update_FullMethodName  = "/begonia.org.sdk.EndpointService/Update"
 	EndpointService_Delete_FullMethodName  = "/begonia.org.sdk.EndpointService/Delete"
 	EndpointService_List_FullMethodName    = "/begonia.org.sdk.EndpointService/List"
@@ -30,7 +30,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EndpointServiceClient interface {
-	Config(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error)
+	Put(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error)
 	Update(ctx context.Context, in *EndpointSrvUpdateRequest, opts ...grpc.CallOption) (*UpdateEndpointResponse, error)
 	Delete(ctx context.Context, in *DeleteEndpointRequest, opts ...grpc.CallOption) (*DeleteEndpointResponse, error)
 	List(ctx context.Context, in *ListEndpointRequest, opts ...grpc.CallOption) (*ListEndpointResponse, error)
@@ -45,9 +45,9 @@ func NewEndpointServiceClient(cc grpc.ClientConnInterface) EndpointServiceClient
 	return &endpointServiceClient{cc}
 }
 
-func (c *endpointServiceClient) Config(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error) {
+func (c *endpointServiceClient) Put(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error) {
 	out := new(AddEndpointResponse)
-	err := c.cc.Invoke(ctx, EndpointService_Config_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, EndpointService_Put_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (c *endpointServiceClient) Details(ctx context.Context, in *DetailsEndpoint
 // All implementations must embed UnimplementedEndpointServiceServer
 // for forward compatibility
 type EndpointServiceServer interface {
-	Config(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error)
+	Put(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error)
 	Update(context.Context, *EndpointSrvUpdateRequest) (*UpdateEndpointResponse, error)
 	Delete(context.Context, *DeleteEndpointRequest) (*DeleteEndpointResponse, error)
 	List(context.Context, *ListEndpointRequest) (*ListEndpointResponse, error)
@@ -106,8 +106,8 @@ type EndpointServiceServer interface {
 type UnimplementedEndpointServiceServer struct {
 }
 
-func (UnimplementedEndpointServiceServer) Config(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Config not implemented")
+func (UnimplementedEndpointServiceServer) Put(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Put not implemented")
 }
 func (UnimplementedEndpointServiceServer) Update(context.Context, *EndpointSrvUpdateRequest) (*UpdateEndpointResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -134,20 +134,20 @@ func RegisterEndpointServiceServer(s grpc.ServiceRegistrar, srv EndpointServiceS
 	s.RegisterService(&EndpointService_ServiceDesc, srv)
 }
 
-func _EndpointService_Config_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EndpointService_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EndpointSrvConfig)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EndpointServiceServer).Config(ctx, in)
+		return srv.(EndpointServiceServer).Put(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EndpointService_Config_FullMethodName,
+		FullMethod: EndpointService_Put_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EndpointServiceServer).Config(ctx, req.(*EndpointSrvConfig))
+		return srv.(EndpointServiceServer).Put(ctx, req.(*EndpointSrvConfig))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -232,8 +232,8 @@ var EndpointService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*EndpointServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Config",
-			Handler:    _EndpointService_Config_Handler,
+			MethodName: "Put",
+			Handler:    _EndpointService_Put_Handler,
 		},
 		{
 			MethodName: "Update",

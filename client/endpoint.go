@@ -135,12 +135,12 @@ func (bc *BaseAPI) PatchEndpointConfig(ctx context.Context, config *api.Endpoint
 	pMap := map[string]interface{}{}
 	_ = json.Unmarshal(payload, &pMap)
 	mask := &fieldmaskpb.FieldMask{}
-	if bData, err := json.Marshal(pMap["mask"]); err == nil {
+	if bData, err := json.Marshal(pMap["update_mask"]); err == nil {
 		// pMap["mask"] = strings.Join(mask.Paths, ",")
 		if err := json.Unmarshal(bData, mask); err != nil {
 			return nil, err
 		}
-		pMap["mask"] = strings.Join(mask.Paths, ",")
+		pMap["update_mask"] = strings.Join(mask.Paths, ",")
 		payload, _ = json.Marshal(pMap)
 	}
 
