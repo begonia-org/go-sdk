@@ -38,7 +38,7 @@ func (c *client) SayHello() (string, error) {
 
 func (c *client) SayHelloStreamReply() (<-chan string, error) {
 
-	stream, err := c.gc.SayHelloStreamReply(context.Background(), &v1.HelloRequest{Msg: "begonia"})
+	stream, err := c.gc.SayHelloServerSideEvent(context.Background(), &v1.HelloRequest{Msg: "begonia"})
 	if err != nil {
 		log.Errorf("say hello stream reply resp error:%v", err)
 		return nil, err
@@ -62,13 +62,13 @@ func (c *client) SayHelloStreamReply() (<-chan string, error) {
 	return ch, nil
 }
 
-func (c *client) SayHelloStreamSend() (string, error) {
+func (c *client) SayHelloStreamSend() ([]*v1.HelloReply, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	stream, err := c.gc.SayHelloStreamSend(ctx)
+	stream, err := c.gc.SayHelloClientStream(ctx)
 	if err != nil {
 		log.Errorf("say hello stream send error:%v", err)
-		return "", err
+		return nil, err
 	}
 	words := []string{
 		"你好",
@@ -85,14 +85,14 @@ func (c *client) SayHelloStreamSend() (string, error) {
 	if err != nil {
 		log.Errorf("say hello stream send error:%v", err)
 	}
-	log.Infof("say hello stream send:%s", r.Message)
-	return r.Message, nil
+	// log.Infof("say hello stream send:%s", r.Message)
+	return r.Replies, nil
 }
 
 func (c *client) SayHelloBidiStream() (<-chan string, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	// defer cancel()
-	stream, err := c.gc.SayHelloBidiStream(context.Background())
+	stream, err := c.gc.SayHelloWebsocket(context.Background())
 	if err != nil {
 		log.Errorf("say hello bidi stream error:%v", err)
 		return nil, err

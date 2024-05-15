@@ -8,6 +8,7 @@ package v1
 
 import (
 	context "context"
+	httpbody "google.golang.org/genproto/googleapis/api/httpbody"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,11 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Greeter_SayHello_FullMethodName            = "/helloworld.Greeter/SayHello"
-	Greeter_SayHelloGet_FullMethodName         = "/helloworld.Greeter/SayHelloGet"
-	Greeter_SayHelloStreamReply_FullMethodName = "/helloworld.Greeter/SayHelloStreamReply"
-	Greeter_SayHelloStreamSend_FullMethodName  = "/helloworld.Greeter/SayHelloStreamSend"
-	Greeter_SayHelloBidiStream_FullMethodName  = "/helloworld.Greeter/SayHelloBidiStream"
+	Greeter_SayHello_FullMethodName                = "/helloworld.Greeter/SayHello"
+	Greeter_SayHelloGet_FullMethodName             = "/helloworld.Greeter/SayHelloGet"
+	Greeter_SayHelloServerSideEvent_FullMethodName = "/helloworld.Greeter/SayHelloServerSideEvent"
+	Greeter_SayHelloClientStream_FullMethodName    = "/helloworld.Greeter/SayHelloClientStream"
+	Greeter_SayHelloWebsocket_FullMethodName       = "/helloworld.Greeter/SayHelloWebsocket"
+	Greeter_SayHelloBody_FullMethodName            = "/helloworld.Greeter/SayHelloBody"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -33,9 +35,10 @@ type GreeterClient interface {
 	// Sends a greeting
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 	SayHelloGet(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
-	SayHelloStreamReply(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (Greeter_SayHelloStreamReplyClient, error)
-	SayHelloStreamSend(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloStreamSendClient, error)
-	SayHelloBidiStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloBidiStreamClient, error)
+	SayHelloServerSideEvent(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (Greeter_SayHelloServerSideEventClient, error)
+	SayHelloClientStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloClientStreamClient, error)
+	SayHelloWebsocket(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloWebsocketClient, error)
+	SayHelloBody(ctx context.Context, in *httpbody.HttpBody, opts ...grpc.CallOption) (*httpbody.HttpBody, error)
 }
 
 type greeterClient struct {
@@ -64,12 +67,12 @@ func (c *greeterClient) SayHelloGet(ctx context.Context, in *HelloRequest, opts 
 	return out, nil
 }
 
-func (c *greeterClient) SayHelloStreamReply(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (Greeter_SayHelloStreamReplyClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[0], Greeter_SayHelloStreamReply_FullMethodName, opts...)
+func (c *greeterClient) SayHelloServerSideEvent(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (Greeter_SayHelloServerSideEventClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[0], Greeter_SayHelloServerSideEvent_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &greeterSayHelloStreamReplyClient{stream}
+	x := &greeterSayHelloServerSideEventClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -79,16 +82,16 @@ func (c *greeterClient) SayHelloStreamReply(ctx context.Context, in *HelloReques
 	return x, nil
 }
 
-type Greeter_SayHelloStreamReplyClient interface {
+type Greeter_SayHelloServerSideEventClient interface {
 	Recv() (*HelloReply, error)
 	grpc.ClientStream
 }
 
-type greeterSayHelloStreamReplyClient struct {
+type greeterSayHelloServerSideEventClient struct {
 	grpc.ClientStream
 }
 
-func (x *greeterSayHelloStreamReplyClient) Recv() (*HelloReply, error) {
+func (x *greeterSayHelloServerSideEventClient) Recv() (*HelloReply, error) {
 	m := new(HelloReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -96,69 +99,78 @@ func (x *greeterSayHelloStreamReplyClient) Recv() (*HelloReply, error) {
 	return m, nil
 }
 
-func (c *greeterClient) SayHelloStreamSend(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloStreamSendClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[1], Greeter_SayHelloStreamSend_FullMethodName, opts...)
+func (c *greeterClient) SayHelloClientStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloClientStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[1], Greeter_SayHelloClientStream_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &greeterSayHelloStreamSendClient{stream}
+	x := &greeterSayHelloClientStreamClient{stream}
 	return x, nil
 }
 
-type Greeter_SayHelloStreamSendClient interface {
+type Greeter_SayHelloClientStreamClient interface {
 	Send(*HelloRequest) error
-	CloseAndRecv() (*HelloReply, error)
+	CloseAndRecv() (*RepeatedReply, error)
 	grpc.ClientStream
 }
 
-type greeterSayHelloStreamSendClient struct {
+type greeterSayHelloClientStreamClient struct {
 	grpc.ClientStream
 }
 
-func (x *greeterSayHelloStreamSendClient) Send(m *HelloRequest) error {
+func (x *greeterSayHelloClientStreamClient) Send(m *HelloRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *greeterSayHelloStreamSendClient) CloseAndRecv() (*HelloReply, error) {
+func (x *greeterSayHelloClientStreamClient) CloseAndRecv() (*RepeatedReply, error) {
 	if err := x.ClientStream.CloseSend(); err != nil {
 		return nil, err
 	}
-	m := new(HelloReply)
+	m := new(RepeatedReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (c *greeterClient) SayHelloBidiStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloBidiStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[2], Greeter_SayHelloBidiStream_FullMethodName, opts...)
+func (c *greeterClient) SayHelloWebsocket(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloWebsocketClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[2], Greeter_SayHelloWebsocket_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &greeterSayHelloBidiStreamClient{stream}
+	x := &greeterSayHelloWebsocketClient{stream}
 	return x, nil
 }
 
-type Greeter_SayHelloBidiStreamClient interface {
+type Greeter_SayHelloWebsocketClient interface {
 	Send(*HelloRequest) error
 	Recv() (*HelloReply, error)
 	grpc.ClientStream
 }
 
-type greeterSayHelloBidiStreamClient struct {
+type greeterSayHelloWebsocketClient struct {
 	grpc.ClientStream
 }
 
-func (x *greeterSayHelloBidiStreamClient) Send(m *HelloRequest) error {
+func (x *greeterSayHelloWebsocketClient) Send(m *HelloRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *greeterSayHelloBidiStreamClient) Recv() (*HelloReply, error) {
+func (x *greeterSayHelloWebsocketClient) Recv() (*HelloReply, error) {
 	m := new(HelloReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *greeterClient) SayHelloBody(ctx context.Context, in *httpbody.HttpBody, opts ...grpc.CallOption) (*httpbody.HttpBody, error) {
+	out := new(httpbody.HttpBody)
+	err := c.cc.Invoke(ctx, Greeter_SayHelloBody_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // GreeterServer is the server API for Greeter service.
@@ -168,9 +180,10 @@ type GreeterServer interface {
 	// Sends a greeting
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 	SayHelloGet(context.Context, *HelloRequest) (*HelloReply, error)
-	SayHelloStreamReply(*HelloRequest, Greeter_SayHelloStreamReplyServer) error
-	SayHelloStreamSend(Greeter_SayHelloStreamSendServer) error
-	SayHelloBidiStream(Greeter_SayHelloBidiStreamServer) error
+	SayHelloServerSideEvent(*HelloRequest, Greeter_SayHelloServerSideEventServer) error
+	SayHelloClientStream(Greeter_SayHelloClientStreamServer) error
+	SayHelloWebsocket(Greeter_SayHelloWebsocketServer) error
+	SayHelloBody(context.Context, *httpbody.HttpBody) (*httpbody.HttpBody, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -184,14 +197,17 @@ func (UnimplementedGreeterServer) SayHello(context.Context, *HelloRequest) (*Hel
 func (UnimplementedGreeterServer) SayHelloGet(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHelloGet not implemented")
 }
-func (UnimplementedGreeterServer) SayHelloStreamReply(*HelloRequest, Greeter_SayHelloStreamReplyServer) error {
-	return status.Errorf(codes.Unimplemented, "method SayHelloStreamReply not implemented")
+func (UnimplementedGreeterServer) SayHelloServerSideEvent(*HelloRequest, Greeter_SayHelloServerSideEventServer) error {
+	return status.Errorf(codes.Unimplemented, "method SayHelloServerSideEvent not implemented")
 }
-func (UnimplementedGreeterServer) SayHelloStreamSend(Greeter_SayHelloStreamSendServer) error {
-	return status.Errorf(codes.Unimplemented, "method SayHelloStreamSend not implemented")
+func (UnimplementedGreeterServer) SayHelloClientStream(Greeter_SayHelloClientStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method SayHelloClientStream not implemented")
 }
-func (UnimplementedGreeterServer) SayHelloBidiStream(Greeter_SayHelloBidiStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method SayHelloBidiStream not implemented")
+func (UnimplementedGreeterServer) SayHelloWebsocket(Greeter_SayHelloWebsocketServer) error {
+	return status.Errorf(codes.Unimplemented, "method SayHelloWebsocket not implemented")
+}
+func (UnimplementedGreeterServer) SayHelloBody(context.Context, *httpbody.HttpBody) (*httpbody.HttpBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayHelloBody not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -242,46 +258,46 @@ func _Greeter_SayHelloGet_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Greeter_SayHelloStreamReply_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Greeter_SayHelloServerSideEvent_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(HelloRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(GreeterServer).SayHelloStreamReply(m, &greeterSayHelloStreamReplyServer{stream})
+	return srv.(GreeterServer).SayHelloServerSideEvent(m, &greeterSayHelloServerSideEventServer{stream})
 }
 
-type Greeter_SayHelloStreamReplyServer interface {
+type Greeter_SayHelloServerSideEventServer interface {
 	Send(*HelloReply) error
 	grpc.ServerStream
 }
 
-type greeterSayHelloStreamReplyServer struct {
+type greeterSayHelloServerSideEventServer struct {
 	grpc.ServerStream
 }
 
-func (x *greeterSayHelloStreamReplyServer) Send(m *HelloReply) error {
+func (x *greeterSayHelloServerSideEventServer) Send(m *HelloReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _Greeter_SayHelloStreamSend_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(GreeterServer).SayHelloStreamSend(&greeterSayHelloStreamSendServer{stream})
+func _Greeter_SayHelloClientStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GreeterServer).SayHelloClientStream(&greeterSayHelloClientStreamServer{stream})
 }
 
-type Greeter_SayHelloStreamSendServer interface {
-	SendAndClose(*HelloReply) error
+type Greeter_SayHelloClientStreamServer interface {
+	SendAndClose(*RepeatedReply) error
 	Recv() (*HelloRequest, error)
 	grpc.ServerStream
 }
 
-type greeterSayHelloStreamSendServer struct {
+type greeterSayHelloClientStreamServer struct {
 	grpc.ServerStream
 }
 
-func (x *greeterSayHelloStreamSendServer) SendAndClose(m *HelloReply) error {
+func (x *greeterSayHelloClientStreamServer) SendAndClose(m *RepeatedReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *greeterSayHelloStreamSendServer) Recv() (*HelloRequest, error) {
+func (x *greeterSayHelloClientStreamServer) Recv() (*HelloRequest, error) {
 	m := new(HelloRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -289,30 +305,48 @@ func (x *greeterSayHelloStreamSendServer) Recv() (*HelloRequest, error) {
 	return m, nil
 }
 
-func _Greeter_SayHelloBidiStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(GreeterServer).SayHelloBidiStream(&greeterSayHelloBidiStreamServer{stream})
+func _Greeter_SayHelloWebsocket_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GreeterServer).SayHelloWebsocket(&greeterSayHelloWebsocketServer{stream})
 }
 
-type Greeter_SayHelloBidiStreamServer interface {
+type Greeter_SayHelloWebsocketServer interface {
 	Send(*HelloReply) error
 	Recv() (*HelloRequest, error)
 	grpc.ServerStream
 }
 
-type greeterSayHelloBidiStreamServer struct {
+type greeterSayHelloWebsocketServer struct {
 	grpc.ServerStream
 }
 
-func (x *greeterSayHelloBidiStreamServer) Send(m *HelloReply) error {
+func (x *greeterSayHelloWebsocketServer) Send(m *HelloReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *greeterSayHelloBidiStreamServer) Recv() (*HelloRequest, error) {
+func (x *greeterSayHelloWebsocketServer) Recv() (*HelloRequest, error) {
 	m := new(HelloRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
+}
+
+func _Greeter_SayHelloBody_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(httpbody.HttpBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).SayHelloBody(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_SayHelloBody_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).SayHelloBody(ctx, req.(*httpbody.HttpBody))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
@@ -330,21 +364,25 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "SayHelloGet",
 			Handler:    _Greeter_SayHelloGet_Handler,
 		},
+		{
+			MethodName: "SayHelloBody",
+			Handler:    _Greeter_SayHelloBody_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "SayHelloStreamReply",
-			Handler:       _Greeter_SayHelloStreamReply_Handler,
+			StreamName:    "SayHelloServerSideEvent",
+			Handler:       _Greeter_SayHelloServerSideEvent_Handler,
 			ServerStreams: true,
 		},
 		{
-			StreamName:    "SayHelloStreamSend",
-			Handler:       _Greeter_SayHelloStreamSend_Handler,
+			StreamName:    "SayHelloClientStream",
+			Handler:       _Greeter_SayHelloClientStream_Handler,
 			ClientStreams: true,
 		},
 		{
-			StreamName:    "SayHelloBidiStream",
-			Handler:       _Greeter_SayHelloBidiStream_Handler,
+			StreamName:    "SayHelloWebsocket",
+			Handler:       _Greeter_SayHelloWebsocket_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
