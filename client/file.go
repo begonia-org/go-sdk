@@ -291,7 +291,7 @@ func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, ver
 		if err != nil {
 			return "", err
 		}
-		sha256Str := rsp.Header.Get("x-content-sha256")
+		sha256Str := rsp.Header.Get("x-file-sha256")
 		return sha256Str, nil
 	}
 	return "", fmt.Errorf("Failed to download file")

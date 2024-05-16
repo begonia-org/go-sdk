@@ -13,10 +13,15 @@ import (
 	"google.golang.org/grpc"
 )
 
+var s *grpc.Server
+
 type server struct {
 	v1.UnimplementedGreeterServer
 }
 
+func NewExampleServer() *server {
+	return &server{}
+}
 func (s *server) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
 	// fmt.Printf("Received: %v\n", in.GetMsg())
 	return &v1.HelloReply{Message: in.Msg, Name: in.Name}, nil
@@ -41,7 +46,7 @@ func (s *server) SayHelloGet(ctx context.Context, in *v1.HelloRequest) (*v1.Hell
 func (s *server) SayHelloClientStream(stream v1.Greeter_SayHelloClientStreamServer) error {
 	// reply := "你好:"、
 	replies := make([]*v1.HelloReply, 0)
-	index:=0
+	index := 0
 	for {
 		// 接收客户端发来的流式数据
 		res, err := stream.Recv()
@@ -54,7 +59,7 @@ func (s *server) SayHelloClientStream(stream v1.Greeter_SayHelloClientStreamServ
 			return err
 		}
 		replies = append(replies, &v1.HelloReply{
-			Message: fmt.Sprintf("%s-%d", res.GetMsg(),index),
+			Message: fmt.Sprintf("%s-%d", res.GetMsg(), index),
 			Name:    res.GetName(),
 		})
 		index++
@@ -69,7 +74,9 @@ func (s *server) SayHelloWebsocket(stream v1.Greeter_SayHelloWebsocketServer) er
 	for {
 		// 接收流式请求
 		in, err := stream.Recv()
-
+		if err == io.EOF {
+			return nil
+		}
 		if err != nil {
 			return err
 		}
@@ -105,6 +112,10 @@ func (s *server) SayHelloBody(ctx context.Context, in *httpbody.HttpBody) (*http
 	}, nil
 
 }
+func (s *server) Desc() *grpc.ServiceDesc {
+	return &v1.Greeter_ServiceDesc
+}
+
 func Run(addr string) {
 	// 监听本地的8972端口
 	lis, err := net.Listen("tcp", addr)
@@ -112,12 +123,20 @@ func Run(addr string) {
 		fmt.Printf("failed to listen: %v", err)
 		return
 	}
-	s := grpc.NewServer()                  // 创建gRPC服务器
+	s = grpc.NewServer()                   // 创建gRPC服务器
 	v1.RegisterGreeterServer(s, &server{}) // 在gRPC服务端注册服务
 	// 启动服务
 	err = s.Serve(lis)
 	if err != nil {
 		fmt.Printf("failed to serve: %v", err)
+
 		return
 	}
+}
+func Stop() {
+	if s == nil {
+		return
+	}
+	s.GracefulStop()
+	s.Stop()
 }
