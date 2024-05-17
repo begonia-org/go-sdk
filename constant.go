@@ -18,5 +18,5 @@ func GetHttpHeaderKey(key string) string {
 	if strings.HasPrefix(key, MetadataKeyPrefix) {
 		return strings.TrimPrefix(key, MetadataKeyPrefix+"-")
 	}
-	return ""
+	return key
 }
