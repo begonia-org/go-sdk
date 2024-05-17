@@ -14,6 +14,7 @@ import (
 	"google.golang.org/genproto/googleapis/api/httpbody"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 )
 
 var s *grpc.Server
@@ -27,6 +28,7 @@ func NewExampleServer() *server {
 }
 func (s *server) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
 	// fmt.Printf("Received: %v\n", in.GetMsg())
+
 	return &v1.HelloReply{Message: in.Msg, Name: in.Name}, nil
 }
 func (s *server) SayHelloServerSideEvent(in *v1.HelloRequest, stream v1.Greeter_SayHelloServerSideEventServer) error {
@@ -43,6 +45,22 @@ func (s *server) SayHelloServerSideEvent(in *v1.HelloRequest, stream v1.Greeter_
 	return nil
 }
 func (s *server) SayHelloGet(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		md = metadata.New(nil)
+	}
+	md.Set("test", "test")
+	md.Set(gosdk.GetMetadataKey("trace_id"), "123456")
+	md.Set("content-type", "application/json")
+	if in.Name == "http-code" {
+		md.Set("x-http-code", "226")
+	}
+	err := grpc.SendHeader(ctx, md)
+	if err != nil {
+		log.Printf("SendHeader error: %v", err)
+		return nil, err
+	}
+
 	return &v1.HelloReply{Message: in.Msg, Name: in.Name}, nil
 
 }
