@@ -8,9 +8,12 @@ import (
 	"log"
 	"net"
 
+	gosdk "github.com/begonia-org/go-sdk"
 	v1 "github.com/begonia-org/go-sdk/api/example/v1"
+	common "github.com/begonia-org/go-sdk/common/api/v1"
 	"google.golang.org/genproto/googleapis/api/httpbody"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 )
 
 var s *grpc.Server
@@ -111,6 +114,36 @@ func (s *server) SayHelloBody(ctx context.Context, in *httpbody.HttpBody) (*http
 		Data: data,
 	}, nil
 
+}
+func (s *server) SayHelloError(ctx context.Context, in *v1.ErrorRequest) (*v1.HelloReply, error) {
+	log.Printf("SayHelloError: %s,code:%d", in.Msg, in.Code)
+	switch codes.Code(in.Code) {
+	case codes.OK:
+		return &v1.HelloReply{Message: in.Msg}, nil
+	case codes.InvalidArgument:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_PARAMS_ERROR), codes.InvalidArgument, "SayHelloError")
+	case codes.Internal:
+		// log.Printf("SayHelloError: %s,code:%d", in.Msg, in.Code)
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_INTERNAL_ERROR), codes.Internal, "SayHelloError")
+	case codes.NotFound:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_NOT_FOUND), codes.NotFound, "SayHelloError")
+	case codes.PermissionDenied:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_AUTH_ERROR), codes.PermissionDenied, "SayHelloError")
+	case codes.Unauthenticated:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_AUTH_ERROR), codes.Unauthenticated, "SayHelloError")
+	case codes.Unimplemented:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_UNKNOWN), codes.Unimplemented, "SayHelloError")
+	case codes.Unknown:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_UNKNOWN), codes.Unknown, "SayHelloError")
+	case codes.AlreadyExists:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_PARAMS_ERROR), codes.AlreadyExists, "SayHelloError")
+	case codes.DeadlineExceeded:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_TIMEOUT_ERROR), codes.DeadlineExceeded, "SayHelloError")
+	case codes.ResourceExhausted:
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_RESOURCE_EXHAUSTED), codes.ResourceExhausted, "SayHelloError")
+
+	}
+	return nil, nil
 }
 func (s *server) Desc() *grpc.ServiceDesc {
 	return &v1.Greeter_ServiceDesc

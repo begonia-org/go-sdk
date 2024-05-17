@@ -116,6 +116,47 @@
             "OutPkg": "helloworld"
         }
     ],
+    "/helloworld.Greeter/SayHelloError": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3,
+                    2,
+                    4
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "example",
+                    "error",
+                    "test"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/example/error/test"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/helloworld.Greeter/SayHelloError",
+            "HttpUri": "/api/v1/example/error/test",
+            "PathParams": [],
+            "InName": "ErrorRequest",
+            "OutName": "HelloReply",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "helloworld",
+            "InPkg": "helloworld",
+            "OutPkg": "helloworld"
+        }
+    ],
     "/helloworld.Greeter/SayHelloGet": [
         {
             "Pattern": {},

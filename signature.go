@@ -18,7 +18,6 @@ import (
 	"time"
 
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 type RequestHeader struct {
@@ -76,44 +75,6 @@ func (h *RequestHeader) ToMetadata() metadata.MD {
 }
 func NewRequestHeader() *RequestHeader {
 	return &RequestHeader{headers: make(map[string]string)}
-}
-
-// applyFieldsMask apply field mask to request payload
-// 将pb格式的fieldmask转换为json格式参与签名
-func applyFieldsMask(v interface{}) ([]byte, error) {
-	payload, err := json.Marshal(v)
-	if err != nil {
-		return nil, fmt.Errorf("json marshal request payload error:%w", err)
-	}
-	pMap := make(map[string]interface{})
-	err = json.Unmarshal(payload, &pMap)
-	if err != nil {
-		return nil, fmt.Errorf("json unmarshal request payload error:%w", err)
-
-	}
-	if message, ok := v.(protoreflect.ProtoMessage); ok && message != nil {
-		md := message.ProtoReflect().Descriptor()
-		// 遍历所有字段
-		for i := 0; i < md.Fields().Len(); i++ {
-			field := md.Fields().Get(i)
-
-			// 检查字段是否是FieldMask类型
-			if field.Message() != nil && field.Message().FullName() == "google.protobuf.FieldMask" {
-
-				pathsField := message.ProtoReflect().Get(field).Message().Descriptor().Fields().ByJSONName("paths")
-				// log.Printf("field:%s,paths:%s", field.JSONName(), pathsField.JSONName())
-				// 获取FieldMask中的paths字段
-				list := message.ProtoReflect().Get(field).Message().Get(pathsField).List()
-				paths := make([]string, 0)
-				for i := 0; i < list.Len(); i++ {
-					paths = append(paths, list.Get(i).String())
-				}
-				pMap[field.JSONName()] = strings.Join(paths, ",")
-			}
-		}
-	}
-	return json.Marshal(pMap)
-
 }
 
 // filtersUriParams 过滤uri上的附加的参数

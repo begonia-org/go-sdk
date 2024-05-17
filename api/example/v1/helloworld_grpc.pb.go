@@ -26,6 +26,7 @@ const (
 	Greeter_SayHelloClientStream_FullMethodName    = "/helloworld.Greeter/SayHelloClientStream"
 	Greeter_SayHelloWebsocket_FullMethodName       = "/helloworld.Greeter/SayHelloWebsocket"
 	Greeter_SayHelloBody_FullMethodName            = "/helloworld.Greeter/SayHelloBody"
+	Greeter_SayHelloError_FullMethodName           = "/helloworld.Greeter/SayHelloError"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -39,6 +40,7 @@ type GreeterClient interface {
 	SayHelloClientStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloClientStreamClient, error)
 	SayHelloWebsocket(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloWebsocketClient, error)
 	SayHelloBody(ctx context.Context, in *httpbody.HttpBody, opts ...grpc.CallOption) (*httpbody.HttpBody, error)
+	SayHelloError(ctx context.Context, in *ErrorRequest, opts ...grpc.CallOption) (*HelloReply, error)
 }
 
 type greeterClient struct {
@@ -173,6 +175,15 @@ func (c *greeterClient) SayHelloBody(ctx context.Context, in *httpbody.HttpBody,
 	return out, nil
 }
 
+func (c *greeterClient) SayHelloError(ctx context.Context, in *ErrorRequest, opts ...grpc.CallOption) (*HelloReply, error) {
+	out := new(HelloReply)
+	err := c.cc.Invoke(ctx, Greeter_SayHelloError_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility
@@ -184,6 +195,7 @@ type GreeterServer interface {
 	SayHelloClientStream(Greeter_SayHelloClientStreamServer) error
 	SayHelloWebsocket(Greeter_SayHelloWebsocketServer) error
 	SayHelloBody(context.Context, *httpbody.HttpBody) (*httpbody.HttpBody, error)
+	SayHelloError(context.Context, *ErrorRequest) (*HelloReply, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -208,6 +220,9 @@ func (UnimplementedGreeterServer) SayHelloWebsocket(Greeter_SayHelloWebsocketSer
 }
 func (UnimplementedGreeterServer) SayHelloBody(context.Context, *httpbody.HttpBody) (*httpbody.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHelloBody not implemented")
+}
+func (UnimplementedGreeterServer) SayHelloError(context.Context, *ErrorRequest) (*HelloReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayHelloError not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
@@ -349,6 +364,24 @@ func _Greeter_SayHelloBody_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_SayHelloError_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ErrorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).SayHelloError(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_SayHelloError_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).SayHelloError(ctx, req.(*ErrorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -367,6 +400,10 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SayHelloBody",
 			Handler:    _Greeter_SayHelloBody_Handler,
+		},
+		{
+			MethodName: "SayHelloError",
+			Handler:    _Greeter_SayHelloError_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
