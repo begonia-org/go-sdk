@@ -139,7 +139,7 @@ func (s *server) SayHelloError(ctx context.Context, in *v1.ErrorRequest) (*v1.He
 	case codes.OK:
 		return &v1.HelloReply{Message: in.Msg}, nil
 	case codes.InvalidArgument:
-		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_PARAMS_ERROR), codes.InvalidArgument, "SayHelloError")
+		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_PARAMS_ERROR), codes.InvalidArgument, "SayHelloError", gosdk.WithClientMessage("error params"))
 	case codes.Internal:
 		// log.Printf("SayHelloError: %s,code:%d", in.Msg, in.Code)
 		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_INTERNAL_ERROR), codes.Internal, "SayHelloError")
@@ -161,6 +161,18 @@ func (s *server) SayHelloError(ctx context.Context, in *v1.ErrorRequest) (*v1.He
 		return nil, gosdk.NewError(fmt.Errorf(in.Msg), int32(common.Code_RESOURCE_EXHAUSTED), codes.ResourceExhausted, "SayHelloError")
 
 	}
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		md = metadata.New(nil)
+	}
+	md.Set(gosdk.GetMetadataKey("x-http-code"), "test")
+	err := grpc.SendHeader(ctx, md)
+	if err != nil {
+		log.Printf("SendHeader error: %v", err)
+		return nil, err
+
+	}
+
 	return nil, nil
 }
 func (s *server) Desc() *grpc.ServiceDesc {
