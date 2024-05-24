@@ -130,7 +130,7 @@ func (f *FilesAPI) UploadPart(ctx context.Context, data []byte, key string, part
 	var err error
 	defer func(ctx context.Context) {
 		if err != nil {
-			_,_=f.AbortUpload(ctx, uploadId)
+			_, _ = f.AbortUpload(ctx, uploadId)
 		}
 	}(ctx)
 	payload, err := json.Marshal(&content)
@@ -307,7 +307,21 @@ func (f *FilesAPI) RangeDownload(ctx context.Context, key string, version string
 	uri := fmt.Sprintf("%s?%s", Download_PART_API, values.Encode())
 	headers := make(map[string]string)
 	headers["accept"] = "application/octet-stream"
-	headers["range"] = fmt.Sprintf("bytes=%d-%d", start, end)
+	rangeHeader := "bytes="
+	if start >= 0 {
+		rangeHeader += fmt.Sprintf("%d-", start)
+	}
+	if end >= 0 {
+		if start >= 0 {
+			rangeHeader += fmt.Sprintf("%d", end)
+
+		} else {
+			rangeHeader += fmt.Sprintf("-%d", end)
+
+		}
+
+	}
+	headers["range"] = rangeHeader
 	rsp, err := f.Get(ctx, uri, headers)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to send request: %w", err)
@@ -391,7 +405,7 @@ func (f *FilesAPI) DownloadMultiParts(ctx context.Context, key string, dst strin
 		rangeStartAt := int64(i) * partSize
 		rangeEndAt := rangeStartAt + partSize - 1
 		if rangeEndAt > metadata.Size {
-			rangeEndAt = metadata.Size -1
+			rangeEndAt = metadata.Size - 1
 		}
 		data, err := f.RangeDownload(ctx, key, version, rangeStartAt, rangeEndAt)
 		if err != nil {
@@ -406,13 +420,13 @@ func (f *FilesAPI) DownloadMultiParts(ctx context.Context, key string, dst strin
 	return metadata, nil
 }
 
-func (f *FilesAPI)DeleteFile(ctx context.Context,key string) (*Response,error){
+func (f *FilesAPI) DeleteFile(ctx context.Context, key string) (*Response, error) {
 	values := url.Values{}
 	values.Add("key", key)
 	uri := fmt.Sprintf("%s?%s", FILE_API, values.Encode())
-	rsp,err := f.Delete(ctx,uri,nil,nil)
+	rsp, err := f.Delete(ctx, uri, nil, nil)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	if rsp != nil {
 		apiRsp := &api.DeleteResponse{}
@@ -420,7 +434,7 @@ func (f *FilesAPI)DeleteFile(ctx context.Context,key string) (*Response,error){
 		if err != nil {
 			return nil, err
 		}
-		return resp,nil
+		return resp, nil
 	}
-	return nil,fmt.Errorf("Failed to delete file")
+	return nil, fmt.Errorf("Failed to delete file")
 }

@@ -319,7 +319,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Upload", runtime.WithHTTPPathPattern("/api/v1/file"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Upload", runtime.WithHTTPPathPattern("/api/v1/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -344,7 +344,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/UploadMultipartFile", runtime.WithHTTPPathPattern("/api/v1/file/part"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/UploadMultipartFile", runtime.WithHTTPPathPattern("/api/v1/files/part"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -369,7 +369,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/file/part/init"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/files/part/init"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -394,7 +394,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/file/part/complete"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/files/part/complete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -419,7 +419,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/file/part/abort"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/files/part/abort"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -444,7 +444,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Download", runtime.WithHTTPPathPattern("/api/v1/file"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Download", runtime.WithHTTPPathPattern("/api/v1/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -469,7 +469,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Delete", runtime.WithHTTPPathPattern("/api/v1/file"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Delete", runtime.WithHTTPPathPattern("/api/v1/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -494,7 +494,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/DownloadForRange", runtime.WithHTTPPathPattern("/api/v1/file/part"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/DownloadForRange", runtime.WithHTTPPathPattern("/api/v1/files/part"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -519,7 +519,7 @@ func RegisterFileServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Metadata", runtime.WithHTTPPathPattern("/api/v1/file/metadata"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.FileService/Metadata", runtime.WithHTTPPathPattern("/api/v1/files/metadata"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -583,7 +583,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Upload", runtime.WithHTTPPathPattern("/api/v1/file"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Upload", runtime.WithHTTPPathPattern("/api/v1/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -605,7 +605,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/UploadMultipartFile", runtime.WithHTTPPathPattern("/api/v1/file/part"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/UploadMultipartFile", runtime.WithHTTPPathPattern("/api/v1/files/part"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -627,7 +627,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/file/part/init"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/files/part/init"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -649,7 +649,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/file/part/complete"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/files/part/complete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -671,7 +671,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/file/part/abort"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/api/v1/files/part/abort"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -693,7 +693,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Download", runtime.WithHTTPPathPattern("/api/v1/file"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Download", runtime.WithHTTPPathPattern("/api/v1/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -715,7 +715,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Delete", runtime.WithHTTPPathPattern("/api/v1/file"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Delete", runtime.WithHTTPPathPattern("/api/v1/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -737,7 +737,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/DownloadForRange", runtime.WithHTTPPathPattern("/api/v1/file/part"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/DownloadForRange", runtime.WithHTTPPathPattern("/api/v1/files/part"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -759,7 +759,7 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Metadata", runtime.WithHTTPPathPattern("/api/v1/file/metadata"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.FileService/Metadata", runtime.WithHTTPPathPattern("/api/v1/files/metadata"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -779,23 +779,23 @@ func RegisterFileServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_FileService_Upload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "file"}, ""))
+	pattern_FileService_Upload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, ""))
 
-	pattern_FileService_UploadMultipartFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "file", "part"}, ""))
+	pattern_FileService_UploadMultipartFile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "part"}, ""))
 
-	pattern_FileService_InitiateMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "file", "part", "init"}, ""))
+	pattern_FileService_InitiateMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "files", "part", "init"}, ""))
 
-	pattern_FileService_CompleteMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "file", "part", "complete"}, ""))
+	pattern_FileService_CompleteMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "files", "part", "complete"}, ""))
 
-	pattern_FileService_AbortMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "file", "part", "abort"}, ""))
+	pattern_FileService_AbortMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "files", "part", "abort"}, ""))
 
-	pattern_FileService_Download_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "file"}, ""))
+	pattern_FileService_Download_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, ""))
 
-	pattern_FileService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "file"}, ""))
+	pattern_FileService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "files"}, ""))
 
-	pattern_FileService_DownloadForRange_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "file", "part"}, ""))
+	pattern_FileService_DownloadForRange_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "part"}, ""))
 
-	pattern_FileService_Metadata_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "file", "metadata"}, ""))
+	pattern_FileService_Metadata_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "files", "metadata"}, ""))
 )
 
 var (

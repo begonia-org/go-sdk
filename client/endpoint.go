@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 
 	api "github.com/begonia-org/go-sdk/api/endpoint/v1"
@@ -37,6 +38,10 @@ type BegoniaClient interface {
 type EndpointAPI struct {
 	*BaseAPI
 }
+type EndpointListResponse struct {
+	*Response
+	*api.ListEndpointResponse
+}
 
 func NewEndpointAPI(addr, accessKey, secretKey string) *EndpointAPI {
 	return &EndpointAPI{
@@ -51,7 +56,7 @@ func (bc *BaseAPI) PostEndpointConfig(ctx context.Context, config *api.EndpointS
 		return nil, err
 	}
 
-	rsp, err := bc.Post(ctx, "/api/v1/endpoint", nil, strings.NewReader(string(payload)))
+	rsp, err := bc.Post(ctx, "/api/v1/endpoints", nil, strings.NewReader(string(payload)))
 
 	if err != nil {
 		return nil, err
@@ -75,7 +80,7 @@ func (bc *BaseAPI) PostEndpointConfig(ctx context.Context, config *api.EndpointS
 }
 func (bc *BaseAPI) GetEndpointDetails(ctx context.Context, endpointId string) (*EndpointDetailsResponse, error) {
 
-	rsp, err := bc.Get(ctx, "/api/v1/endpoint/"+endpointId, nil)
+	rsp, err := bc.Get(ctx, "/api/v1/endpoints/"+endpointId, nil)
 	if err != nil {
 		return nil, err
 
@@ -144,7 +149,7 @@ func (bc *BaseAPI) PatchEndpointConfig(ctx context.Context, config *api.Endpoint
 		payload, _ = json.Marshal(pMap)
 	}
 
-	rsp, err := bc.Patch(ctx, "/api/v1/endpoint", nil, strings.NewReader(string(payload)))
+	rsp, err := bc.Put(ctx, "/api/v1/endpoints/"+config.UniqueKey, nil, strings.NewReader(string(payload)))
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +171,7 @@ func (bc *BaseAPI) PatchEndpointConfig(ctx context.Context, config *api.Endpoint
 }
 
 func (bc *BaseAPI) DeleteEndpointConfig(ctx context.Context, endpointId string) (*EndpointDeleteResponse, error) {
-	rsp, err := bc.Delete(ctx, "/api/v1/endpoint/"+endpointId, nil, nil)
+	rsp, err := bc.Delete(ctx, "/api/v1/endpoints/"+endpointId, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -183,4 +188,31 @@ func (bc *BaseAPI) DeleteEndpointConfig(ctx context.Context, endpointId string) 
 	}
 	return nil, errors.New("delete endpoint config failed")
 
+}
+func (bc *BaseAPI) List(ctx context.Context, tags []string, keys []string) (*EndpointListResponse, error) {
+	values := url.Values{}
+	for _, tag := range tags {
+		values.Add("tags", tag)
+	}
+	for _, key := range keys {
+		values.Add("unique_keys", key)
+	}
+	uri := "/api/v1/endpoints"
+	if len(values) > 0 {
+		uri = fmt.Sprintf("%s?%s", uri, values.Encode())
+	}
+	rsp, err := bc.Get(ctx, uri, nil)
+	if err != nil {
+		return nil, err
+
+	}
+	if rsp != nil {
+		list := &api.ListEndpointResponse{}
+		resp, err := bc.unmarshal(rsp, list)
+		if err != nil {
+			return nil, err
+		}
+		return &EndpointListResponse{Response: resp,ListEndpointResponse: list}, nil
+	}
+	return nil, errors.New("get endpoint list failed")
 }

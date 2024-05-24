@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_EndpointService_Put_0(ctx context.Context, marshaler runtime.Marshaler, client EndpointServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_EndpointService_Post_0(ctx context.Context, marshaler runtime.Marshaler, client EndpointServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq EndpointSrvConfig
 	var metadata runtime.ServerMetadata
 
@@ -39,12 +39,12 @@ func request_EndpointService_Put_0(ctx context.Context, marshaler runtime.Marsha
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.Put(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Post(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_EndpointService_Put_0(ctx context.Context, marshaler runtime.Marshaler, server EndpointServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_EndpointService_Post_0(ctx context.Context, marshaler runtime.Marshaler, server EndpointServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq EndpointSrvConfig
 	var metadata runtime.ServerMetadata
 
@@ -52,7 +52,7 @@ func local_request_EndpointService_Put_0(ctx context.Context, marshaler runtime.
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.Put(ctx, &protoReq)
+	msg, err := server.Post(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -63,6 +63,23 @@ func request_EndpointService_Update_0(ctx context.Context, marshaler runtime.Mar
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["unique_key"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "unique_key")
+	}
+
+	protoReq.UniqueKey, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "unique_key", err)
 	}
 
 	msg, err := client.Update(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -76,6 +93,23 @@ func local_request_EndpointService_Update_0(ctx context.Context, marshaler runti
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["unique_key"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "unique_key")
+	}
+
+	protoReq.UniqueKey, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "unique_key", err)
 	}
 
 	msg, err := server.Update(ctx, &protoReq)
@@ -171,7 +205,7 @@ func local_request_EndpointService_List_0(ctx context.Context, marshaler runtime
 
 }
 
-func request_EndpointService_Details_0(ctx context.Context, marshaler runtime.Marshaler, client EndpointServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_EndpointService_Get_0(ctx context.Context, marshaler runtime.Marshaler, client EndpointServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailsEndpointRequest
 	var metadata runtime.ServerMetadata
 
@@ -192,12 +226,12 @@ func request_EndpointService_Details_0(ctx context.Context, marshaler runtime.Ma
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "unique_key", err)
 	}
 
-	msg, err := client.Details(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Get(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_EndpointService_Details_0(ctx context.Context, marshaler runtime.Marshaler, server EndpointServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_EndpointService_Get_0(ctx context.Context, marshaler runtime.Marshaler, server EndpointServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailsEndpointRequest
 	var metadata runtime.ServerMetadata
 
@@ -218,7 +252,7 @@ func local_request_EndpointService_Details_0(ctx context.Context, marshaler runt
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "unique_key", err)
 	}
 
-	msg, err := server.Details(ctx, &protoReq)
+	msg, err := server.Get(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -229,7 +263,7 @@ func local_request_EndpointService_Details_0(ctx context.Context, marshaler runt
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterEndpointServiceHandlerFromEndpoint instead.
 func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server EndpointServiceServer) error {
 
-	mux.Handle("POST", pattern_EndpointService_Put_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_EndpointService_Post_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -237,12 +271,12 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Put", runtime.WithHTTPPathPattern("/api/v1/endpoint"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Post", runtime.WithHTTPPathPattern("/api/v1/endpoints"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_EndpointService_Put_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_EndpointService_Post_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -250,11 +284,11 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_EndpointService_Put_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_EndpointService_Post_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_EndpointService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_EndpointService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -262,7 +296,7 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Update", runtime.WithHTTPPathPattern("/api/v1/endpoint"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Update", runtime.WithHTTPPathPattern("/api/v1/endpoints/{unique_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -287,7 +321,7 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Delete", runtime.WithHTTPPathPattern("/api/v1/endpoint/{unique_key}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Delete", runtime.WithHTTPPathPattern("/api/v1/endpoints/{unique_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -312,7 +346,7 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/List", runtime.WithHTTPPathPattern("/api/v1/endpoint/batch"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/List", runtime.WithHTTPPathPattern("/api/v1/endpoints"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -329,7 +363,7 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 
 	})
 
-	mux.Handle("GET", pattern_EndpointService_Details_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_EndpointService_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -337,12 +371,12 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Details", runtime.WithHTTPPathPattern("/api/v1/endpoint/{unique_key}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Get", runtime.WithHTTPPathPattern("/api/v1/endpoints/{unique_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_EndpointService_Details_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_EndpointService_Get_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -350,7 +384,7 @@ func RegisterEndpointServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_EndpointService_Details_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_EndpointService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -395,35 +429,35 @@ func RegisterEndpointServiceHandler(ctx context.Context, mux *runtime.ServeMux, 
 // "EndpointServiceClient" to call the correct interceptors.
 func RegisterEndpointServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client EndpointServiceClient) error {
 
-	mux.Handle("POST", pattern_EndpointService_Put_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_EndpointService_Post_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Put", runtime.WithHTTPPathPattern("/api/v1/endpoint"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Post", runtime.WithHTTPPathPattern("/api/v1/endpoints"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_EndpointService_Put_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_EndpointService_Post_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_EndpointService_Put_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_EndpointService_Post_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_EndpointService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_EndpointService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Update", runtime.WithHTTPPathPattern("/api/v1/endpoint"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Update", runtime.WithHTTPPathPattern("/api/v1/endpoints/{unique_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -445,7 +479,7 @@ func RegisterEndpointServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Delete", runtime.WithHTTPPathPattern("/api/v1/endpoint/{unique_key}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Delete", runtime.WithHTTPPathPattern("/api/v1/endpoints/{unique_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -467,7 +501,7 @@ func RegisterEndpointServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/List", runtime.WithHTTPPathPattern("/api/v1/endpoint/batch"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/List", runtime.WithHTTPPathPattern("/api/v1/endpoints"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -483,25 +517,25 @@ func RegisterEndpointServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 
 	})
 
-	mux.Handle("GET", pattern_EndpointService_Details_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_EndpointService_Get_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Details", runtime.WithHTTPPathPattern("/api/v1/endpoint/{unique_key}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.EndpointService/Get", runtime.WithHTTPPathPattern("/api/v1/endpoints/{unique_key}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_EndpointService_Details_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_EndpointService_Get_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_EndpointService_Details_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_EndpointService_Get_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -509,19 +543,19 @@ func RegisterEndpointServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 }
 
 var (
-	pattern_EndpointService_Put_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "endpoint"}, ""))
+	pattern_EndpointService_Post_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "endpoints"}, ""))
 
-	pattern_EndpointService_Update_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "endpoint"}, ""))
+	pattern_EndpointService_Update_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "endpoints", "unique_key"}, ""))
 
-	pattern_EndpointService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "endpoint", "unique_key"}, ""))
+	pattern_EndpointService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "endpoints", "unique_key"}, ""))
 
-	pattern_EndpointService_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "endpoint", "batch"}, ""))
+	pattern_EndpointService_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "endpoints"}, ""))
 
-	pattern_EndpointService_Details_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "endpoint", "unique_key"}, ""))
+	pattern_EndpointService_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "endpoints", "unique_key"}, ""))
 )
 
 var (
-	forward_EndpointService_Put_0 = runtime.ForwardResponseMessage
+	forward_EndpointService_Post_0 = runtime.ForwardResponseMessage
 
 	forward_EndpointService_Update_0 = runtime.ForwardResponseMessage
 
@@ -529,5 +563,5 @@ var (
 
 	forward_EndpointService_List_0 = runtime.ForwardResponseMessage
 
-	forward_EndpointService_Details_0 = runtime.ForwardResponseMessage
+	forward_EndpointService_Get_0 = runtime.ForwardResponseMessage
 )

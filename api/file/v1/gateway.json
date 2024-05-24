@@ -19,17 +19,17 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file",
+                    "files",
                     "part",
                     "abort"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file/part/abort"
+                "Template": "/api/v1/files/part/abort"
             },
             "HttpMethod": "POST",
             "FullMethodName": "/begonia.org.sdk.FileService/AbortMultipartUpload",
-            "HttpUri": "/api/v1/file/part/abort",
+            "HttpUri": "/api/v1/files/part/abort",
             "PathParams": [],
             "InName": "AbortMultipartUploadRequest",
             "OutName": "AbortMultipartUploadResponse",
@@ -60,17 +60,17 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file",
+                    "files",
                     "part",
                     "complete"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file/part/complete"
+                "Template": "/api/v1/files/part/complete"
             },
             "HttpMethod": "POST",
             "FullMethodName": "/begonia.org.sdk.FileService/CompleteMultipartUpload",
-            "HttpUri": "/api/v1/file/part/complete",
+            "HttpUri": "/api/v1/files/part/complete",
             "PathParams": [],
             "InName": "CompleteMultipartUploadRequest",
             "OutName": "CompleteMultipartUploadResponse",
@@ -97,15 +97,15 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file"
+                    "files"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file"
+                "Template": "/api/v1/files"
             },
             "HttpMethod": "DELETE",
             "FullMethodName": "/begonia.org.sdk.FileService/Delete",
-            "HttpUri": "/api/v1/file",
+            "HttpUri": "/api/v1/files",
             "PathParams": [],
             "InName": "DeleteRequest",
             "OutName": "DeleteResponse",
@@ -132,15 +132,15 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file"
+                    "files"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file"
+                "Template": "/api/v1/files"
             },
             "HttpMethod": "GET",
             "FullMethodName": "/begonia.org.sdk.FileService/Download",
-            "HttpUri": "/api/v1/file",
+            "HttpUri": "/api/v1/files",
             "PathParams": [],
             "InName": "DownloadRequest",
             "OutName": "HttpBody",
@@ -169,16 +169,16 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file",
+                    "files",
                     "part"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file/part"
+                "Template": "/api/v1/files/part"
             },
             "HttpMethod": "GET",
             "FullMethodName": "/begonia.org.sdk.FileService/DownloadForRange",
-            "HttpUri": "/api/v1/file/part",
+            "HttpUri": "/api/v1/files/part",
             "PathParams": [],
             "InName": "DownloadRequest",
             "OutName": "HttpBody",
@@ -209,17 +209,17 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file",
+                    "files",
                     "part",
                     "init"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file/part/init"
+                "Template": "/api/v1/files/part/init"
             },
             "HttpMethod": "POST",
             "FullMethodName": "/begonia.org.sdk.FileService/InitiateMultipartUpload",
-            "HttpUri": "/api/v1/file/part/init",
+            "HttpUri": "/api/v1/files/part/init",
             "PathParams": [],
             "InName": "InitiateMultipartUploadRequest",
             "OutName": "InitiateMultipartUploadResponse",
@@ -248,16 +248,16 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file",
+                    "files",
                     "metadata"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file/metadata"
+                "Template": "/api/v1/files/metadata"
             },
             "HttpMethod": "HEAD",
             "FullMethodName": "/begonia.org.sdk.FileService/Metadata",
-            "HttpUri": "/api/v1/file/metadata",
+            "HttpUri": "/api/v1/files/metadata",
             "PathParams": [],
             "InName": "FileMetadataRequest",
             "OutName": "FileMetadataResponse",
@@ -284,15 +284,15 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file"
+                    "files"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file"
+                "Template": "/api/v1/files"
             },
             "HttpMethod": "POST",
             "FullMethodName": "/begonia.org.sdk.FileService/Upload",
-            "HttpUri": "/api/v1/file",
+            "HttpUri": "/api/v1/files",
             "PathParams": [],
             "InName": "UploadFileRequest",
             "OutName": "UploadFileResponse",
@@ -321,16 +321,16 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "file",
+                    "files",
                     "part"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/file/part"
+                "Template": "/api/v1/files/part"
             },
             "HttpMethod": "PUT",
             "FullMethodName": "/begonia.org.sdk.FileService/UploadMultipartFile",
-            "HttpUri": "/api/v1/file/part",
+            "HttpUri": "/api/v1/files/part",
             "PathParams": [],
             "InName": "UploadMultipartFileRequest",
             "OutName": "UploadMultipartFileResponse",

@@ -146,18 +146,18 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "user",
+                    "users",
                     "uid"
                 ],
                 "Verb": "",
                 "Fields": [
                     "uid"
                 ],
-                "Template": "/api/v1/user/{uid}"
+                "Template": "/api/v1/users/{uid}"
             },
             "HttpMethod": "DELETE",
             "FullMethodName": "/begonia.org.sdk.UserService/Delete",
-            "HttpUri": "/api/v1/user/{uid}",
+            "HttpUri": "/api/v1/users/{uid}",
             "PathParams": [
                 "uid"
             ],
@@ -192,18 +192,18 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "user",
+                    "users",
                     "uid"
                 ],
                 "Verb": "",
                 "Fields": [
                     "uid"
                 ],
-                "Template": "/api/v1/user/{uid}"
+                "Template": "/api/v1/users/{uid}"
             },
             "HttpMethod": "GET",
             "FullMethodName": "/begonia.org.sdk.UserService/Get",
-            "HttpUri": "/api/v1/user/{uid}",
+            "HttpUri": "/api/v1/users/{uid}",
             "PathParams": [
                 "uid"
             ],
@@ -232,15 +232,15 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "user"
+                    "users"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/user"
+                "Template": "/api/v1/users"
             },
             "HttpMethod": "POST",
             "FullMethodName": "/begonia.org.sdk.UserService/Register",
-            "HttpUri": "/api/v1/user",
+            "HttpUri": "/api/v1/users",
             "PathParams": [],
             "InName": "PostUserRequest",
             "OutName": "Users",
@@ -273,18 +273,18 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "user",
+                    "users",
                     "uid"
                 ],
                 "Verb": "",
                 "Fields": [
                     "uid"
                 ],
-                "Template": "/api/v1/user/{uid}"
+                "Template": "/api/v1/users/{uid}"
             },
-            "HttpMethod": "PATCH",
+            "HttpMethod": "PUT",
             "FullMethodName": "/begonia.org.sdk.UserService/Update",
-            "HttpUri": "/api/v1/user/{uid}",
+            "HttpUri": "/api/v1/users/{uid}",
             "PathParams": [
                 "uid"
             ],

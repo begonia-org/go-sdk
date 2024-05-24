@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"net/url"
 	"strings"
 
 	api "github.com/begonia-org/go-sdk/api/app/v1"
@@ -25,7 +27,10 @@ type DeleteAppResponse struct {
 	*Response
 	*api.DeleteAppResponse
 }
-
+type ListAPPResponse struct {
+	*Response
+	*api.AppsListResponse
+}
 const (
 	ADD_APP_URI = "/api/v1/app"
 )
@@ -42,7 +47,7 @@ func (ap *AppAPI) PostAppConfig(ctx context.Context, app *api.AppsRequest) (*Add
 		return nil, err
 	}
 
-	rsp, err := ap.Post(ctx, "/api/v1/app", nil, strings.NewReader(string(payload)))
+	rsp, err := ap.Post(ctx, "/api/v1/apps", nil, strings.NewReader(string(payload)))
 
 	if err != nil {
 		return nil, err
@@ -66,7 +71,7 @@ func (ap *AppAPI) PostAppConfig(ctx context.Context, app *api.AppsRequest) (*Add
 
 func (ap *AppAPI) GetAPP(ctx context.Context, appId string) (*AppDetailsResponse, error) {
 
-	rsp, err := ap.Get(ctx, "/api/v1/app/"+appId, nil)
+	rsp, err := ap.Get(ctx, "/api/v1/apps/"+appId, nil)
 	if err != nil {
 		return nil, err
 
@@ -86,7 +91,7 @@ func (ap *AppAPI) GetAPP(ctx context.Context, appId string) (*AppDetailsResponse
 	return nil, errors.New("get app details failed")
 }
 
-func (ap *AppAPI) PatchAPP(ctx context.Context, appid, name, description string, tags []string) (*AppDetailsResponse, error) {
+func (ap *AppAPI) UpdateAPP(ctx context.Context, appid, name, description string, tags []string) (*AppDetailsResponse, error) {
 	app := make(map[string]interface{})
 	mask := &fieldmaskpb.FieldMask{Paths: make([]string, 0)}
 
@@ -108,7 +113,7 @@ func (ap *AppAPI) PatchAPP(ctx context.Context, appid, name, description string,
 	if err != nil {
 		return nil, err
 	}
-	rsp, err := ap.Patch(ctx, "/api/v1/app", nil, strings.NewReader(string(payload)))
+	rsp, err := ap.Put(ctx, "/api/v1/apps", nil, strings.NewReader(string(payload)))
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +133,7 @@ func (ap *AppAPI) PatchAPP(ctx context.Context, appid, name, description string,
 }
 
 func (ap *AppAPI) DeleteAPP(ctx context.Context, appId string) (*DeleteAppResponse, error) {
-	rsp, err := ap.Delete(ctx, "/api/v1/app/"+appId, nil, nil)
+	rsp, err := ap.Delete(ctx, "/api/v1/apps/"+appId, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -144,4 +149,32 @@ func (ap *AppAPI) DeleteAPP(ctx context.Context, appId string) (*DeleteAppRespon
 		}, nil
 	}
 	return nil, errors.New("delete app failed")
+}
+
+func (ap *AppAPI) ListAPP(ctx context.Context, tags []string, status []api.APPStatus, page, pageSize int) (*ListAPPResponse, error) {
+	values := url.Values{}
+	for _, tag := range tags {
+		values.Add("tags", tag)
+	}
+	for _, st := range status {
+		values.Add("status", st.String())
+	}
+	values.Add("page", fmt.Sprint(page))
+	values.Add("page_size", fmt.Sprint(pageSize))
+	rsp, err := ap.Get(ctx, "/api/v1/apps?"+values.Encode(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if rsp != nil {
+		apps := &api.AppsListResponse{}
+		resp, err := ap.unmarshal(rsp, apps)
+		if err != nil {
+			return nil, err
+		}
+		return &ListAPPResponse{
+			Response: resp,
+			AppsListResponse:     apps,
+		}, nil
+	}
+	return nil, errors.New("list app failed")
 }

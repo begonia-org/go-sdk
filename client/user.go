@@ -41,7 +41,7 @@ func (ap *UsersAPI) PostUser(ctx context.Context, user *api.PostUserRequest) (*A
 		return nil, err
 	}
 
-	rsp, err := ap.Post(ctx, "/api/v1/user", nil, strings.NewReader(string(payload)))
+	rsp, err := ap.Post(ctx, "/api/v1/users", nil, strings.NewReader(string(payload)))
 
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (ap *UsersAPI) PostUser(ctx context.Context, user *api.PostUserRequest) (*A
 
 func (ap *UsersAPI) GetUser(ctx context.Context, uid string) (*UsersDetailsResponse, error) {
 
-	rsp, err := ap.Get(ctx, "/api/v1/user/"+uid, nil)
+	rsp, err := ap.Get(ctx, "/api/v1/users/"+uid, nil)
 	if err != nil {
 		return nil, err
 
@@ -85,7 +85,7 @@ func (ap *UsersAPI) GetUser(ctx context.Context, uid string) (*UsersDetailsRespo
 	return nil, errors.New("get app details failed")
 }
 
-func (ap *UsersAPI) PatchUser(ctx context.Context,uid string,updateUser map[string]interface{}) (*UsersDetailsResponse, error) {
+func (ap *UsersAPI) UpdateUser(ctx context.Context,uid string,updateUser map[string]interface{}) (*UsersDetailsResponse, error) {
 	user := make(map[string]interface{})
 	mask := &fieldmaskpb.FieldMask{Paths: make([]string, 0)}
 	for k, v := range updateUser {
@@ -98,7 +98,7 @@ func (ap *UsersAPI) PatchUser(ctx context.Context,uid string,updateUser map[stri
 	if err != nil {
 		return nil, err
 	}
-	rsp, err := ap.Patch(ctx, "/api/v1/user/"+uid, nil, strings.NewReader(string(payload)))
+	rsp, err := ap.Put(ctx, "/api/v1/users/"+uid, nil, strings.NewReader(string(payload)))
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (ap *UsersAPI) PatchUser(ctx context.Context,uid string,updateUser map[stri
 }
 
 func (ap *UsersAPI) DeleteUser(ctx context.Context, uid string) (*DeleteUsersResponse, error) {
-	rsp, err := ap.Delete(ctx, "/api/v1/user/"+uid, nil, nil)
+	rsp, err := ap.Delete(ctx, "/api/v1/users/"+uid, nil, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_AppsService_Put_0(ctx context.Context, marshaler runtime.Marshaler, client AppsServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_AppsService_Post_0(ctx context.Context, marshaler runtime.Marshaler, client AppsServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq AppsRequest
 	var metadata runtime.ServerMetadata
 
@@ -39,12 +39,12 @@ func request_AppsService_Put_0(ctx context.Context, marshaler runtime.Marshaler,
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.Put(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Post(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_AppsService_Put_0(ctx context.Context, marshaler runtime.Marshaler, server AppsServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_AppsService_Post_0(ctx context.Context, marshaler runtime.Marshaler, server AppsServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq AppsRequest
 	var metadata runtime.ServerMetadata
 
@@ -52,12 +52,12 @@ func local_request_AppsService_Put_0(ctx context.Context, marshaler runtime.Mars
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.Put(ctx, &protoReq)
+	msg, err := server.Post(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_AppsService_Patch_0(ctx context.Context, marshaler runtime.Marshaler, client AppsServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_AppsService_Update_0(ctx context.Context, marshaler runtime.Marshaler, client AppsServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq AppsRequest
 	var metadata runtime.ServerMetadata
 
@@ -65,12 +65,12 @@ func request_AppsService_Patch_0(ctx context.Context, marshaler runtime.Marshale
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.Patch(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Update(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_AppsService_Patch_0(ctx context.Context, marshaler runtime.Marshaler, server AppsServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_AppsService_Update_0(ctx context.Context, marshaler runtime.Marshaler, server AppsServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq AppsRequest
 	var metadata runtime.ServerMetadata
 
@@ -78,7 +78,7 @@ func local_request_AppsService_Patch_0(ctx context.Context, marshaler runtime.Ma
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.Patch(ctx, &protoReq)
+	msg, err := server.Update(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -229,7 +229,7 @@ func local_request_AppsService_List_0(ctx context.Context, marshaler runtime.Mar
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterAppsServiceHandlerFromEndpoint instead.
 func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server AppsServiceServer) error {
 
-	mux.Handle("POST", pattern_AppsService_Put_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_AppsService_Post_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -237,12 +237,12 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Put", runtime.WithHTTPPathPattern("/api/v1/app"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Post", runtime.WithHTTPPathPattern("/api/v1/apps"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AppsService_Put_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AppsService_Post_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -250,11 +250,11 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_AppsService_Put_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AppsService_Post_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_AppsService_Patch_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_AppsService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -262,12 +262,12 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Patch", runtime.WithHTTPPathPattern("/api/v1/app"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Update", runtime.WithHTTPPathPattern("/api/v1/apps"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_AppsService_Patch_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_AppsService_Update_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -275,7 +275,7 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 
-		forward_AppsService_Patch_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AppsService_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -287,7 +287,7 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Get", runtime.WithHTTPPathPattern("/api/v1/app/{appid}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Get", runtime.WithHTTPPathPattern("/api/v1/apps/{appid}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -312,7 +312,7 @@ func RegisterAppsServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Delete", runtime.WithHTTPPathPattern("/api/v1/app/{appid}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Delete", runtime.WithHTTPPathPattern("/api/v1/apps/{appid}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -395,47 +395,47 @@ func RegisterAppsServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn
 // "AppsServiceClient" to call the correct interceptors.
 func RegisterAppsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client AppsServiceClient) error {
 
-	mux.Handle("POST", pattern_AppsService_Put_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_AppsService_Post_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Put", runtime.WithHTTPPathPattern("/api/v1/app"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Post", runtime.WithHTTPPathPattern("/api/v1/apps"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AppsService_Put_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AppsService_Post_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_AppsService_Put_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AppsService_Post_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_AppsService_Patch_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_AppsService_Update_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Patch", runtime.WithHTTPPathPattern("/api/v1/app"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Update", runtime.WithHTTPPathPattern("/api/v1/apps"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_AppsService_Patch_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_AppsService_Update_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_AppsService_Patch_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_AppsService_Update_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -445,7 +445,7 @@ func RegisterAppsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Get", runtime.WithHTTPPathPattern("/api/v1/app/{appid}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Get", runtime.WithHTTPPathPattern("/api/v1/apps/{appid}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -467,7 +467,7 @@ func RegisterAppsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Delete", runtime.WithHTTPPathPattern("/api/v1/app/{appid}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/begonia.org.sdk.AppsService/Delete", runtime.WithHTTPPathPattern("/api/v1/apps/{appid}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -509,21 +509,21 @@ func RegisterAppsServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_AppsService_Put_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "app"}, ""))
+	pattern_AppsService_Post_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "apps"}, ""))
 
-	pattern_AppsService_Patch_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "app"}, ""))
+	pattern_AppsService_Update_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "apps"}, ""))
 
-	pattern_AppsService_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "app", "appid"}, ""))
+	pattern_AppsService_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "apps", "appid"}, ""))
 
-	pattern_AppsService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "app", "appid"}, ""))
+	pattern_AppsService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "apps", "appid"}, ""))
 
 	pattern_AppsService_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "apps"}, ""))
 )
 
 var (
-	forward_AppsService_Put_0 = runtime.ForwardResponseMessage
+	forward_AppsService_Post_0 = runtime.ForwardResponseMessage
 
-	forward_AppsService_Patch_0 = runtime.ForwardResponseMessage
+	forward_AppsService_Update_0 = runtime.ForwardResponseMessage
 
 	forward_AppsService_Get_0 = runtime.ForwardResponseMessage
 

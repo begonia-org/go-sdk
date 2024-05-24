@@ -19,22 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	EndpointService_Put_FullMethodName     = "/begonia.org.sdk.EndpointService/Put"
-	EndpointService_Update_FullMethodName  = "/begonia.org.sdk.EndpointService/Update"
-	EndpointService_Delete_FullMethodName  = "/begonia.org.sdk.EndpointService/Delete"
-	EndpointService_List_FullMethodName    = "/begonia.org.sdk.EndpointService/List"
-	EndpointService_Details_FullMethodName = "/begonia.org.sdk.EndpointService/Details"
+	EndpointService_Post_FullMethodName   = "/begonia.org.sdk.EndpointService/Post"
+	EndpointService_Update_FullMethodName = "/begonia.org.sdk.EndpointService/Update"
+	EndpointService_Delete_FullMethodName = "/begonia.org.sdk.EndpointService/Delete"
+	EndpointService_List_FullMethodName   = "/begonia.org.sdk.EndpointService/List"
+	EndpointService_Get_FullMethodName    = "/begonia.org.sdk.EndpointService/Get"
 )
 
 // EndpointServiceClient is the client API for EndpointService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EndpointServiceClient interface {
-	Put(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error)
+	Post(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error)
 	Update(ctx context.Context, in *EndpointSrvUpdateRequest, opts ...grpc.CallOption) (*UpdateEndpointResponse, error)
 	Delete(ctx context.Context, in *DeleteEndpointRequest, opts ...grpc.CallOption) (*DeleteEndpointResponse, error)
 	List(ctx context.Context, in *ListEndpointRequest, opts ...grpc.CallOption) (*ListEndpointResponse, error)
-	Details(ctx context.Context, in *DetailsEndpointRequest, opts ...grpc.CallOption) (*DetailsEndpointResponse, error)
+	Get(ctx context.Context, in *DetailsEndpointRequest, opts ...grpc.CallOption) (*DetailsEndpointResponse, error)
 }
 
 type endpointServiceClient struct {
@@ -45,9 +45,9 @@ func NewEndpointServiceClient(cc grpc.ClientConnInterface) EndpointServiceClient
 	return &endpointServiceClient{cc}
 }
 
-func (c *endpointServiceClient) Put(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error) {
+func (c *endpointServiceClient) Post(ctx context.Context, in *EndpointSrvConfig, opts ...grpc.CallOption) (*AddEndpointResponse, error) {
 	out := new(AddEndpointResponse)
-	err := c.cc.Invoke(ctx, EndpointService_Put_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, EndpointService_Post_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,9 +81,9 @@ func (c *endpointServiceClient) List(ctx context.Context, in *ListEndpointReques
 	return out, nil
 }
 
-func (c *endpointServiceClient) Details(ctx context.Context, in *DetailsEndpointRequest, opts ...grpc.CallOption) (*DetailsEndpointResponse, error) {
+func (c *endpointServiceClient) Get(ctx context.Context, in *DetailsEndpointRequest, opts ...grpc.CallOption) (*DetailsEndpointResponse, error) {
 	out := new(DetailsEndpointResponse)
-	err := c.cc.Invoke(ctx, EndpointService_Details_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, EndpointService_Get_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,11 +94,11 @@ func (c *endpointServiceClient) Details(ctx context.Context, in *DetailsEndpoint
 // All implementations must embed UnimplementedEndpointServiceServer
 // for forward compatibility
 type EndpointServiceServer interface {
-	Put(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error)
+	Post(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error)
 	Update(context.Context, *EndpointSrvUpdateRequest) (*UpdateEndpointResponse, error)
 	Delete(context.Context, *DeleteEndpointRequest) (*DeleteEndpointResponse, error)
 	List(context.Context, *ListEndpointRequest) (*ListEndpointResponse, error)
-	Details(context.Context, *DetailsEndpointRequest) (*DetailsEndpointResponse, error)
+	Get(context.Context, *DetailsEndpointRequest) (*DetailsEndpointResponse, error)
 	mustEmbedUnimplementedEndpointServiceServer()
 }
 
@@ -106,8 +106,8 @@ type EndpointServiceServer interface {
 type UnimplementedEndpointServiceServer struct {
 }
 
-func (UnimplementedEndpointServiceServer) Put(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Put not implemented")
+func (UnimplementedEndpointServiceServer) Post(context.Context, *EndpointSrvConfig) (*AddEndpointResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Post not implemented")
 }
 func (UnimplementedEndpointServiceServer) Update(context.Context, *EndpointSrvUpdateRequest) (*UpdateEndpointResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -118,8 +118,8 @@ func (UnimplementedEndpointServiceServer) Delete(context.Context, *DeleteEndpoin
 func (UnimplementedEndpointServiceServer) List(context.Context, *ListEndpointRequest) (*ListEndpointResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedEndpointServiceServer) Details(context.Context, *DetailsEndpointRequest) (*DetailsEndpointResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Details not implemented")
+func (UnimplementedEndpointServiceServer) Get(context.Context, *DetailsEndpointRequest) (*DetailsEndpointResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedEndpointServiceServer) mustEmbedUnimplementedEndpointServiceServer() {}
 
@@ -134,20 +134,20 @@ func RegisterEndpointServiceServer(s grpc.ServiceRegistrar, srv EndpointServiceS
 	s.RegisterService(&EndpointService_ServiceDesc, srv)
 }
 
-func _EndpointService_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EndpointService_Post_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EndpointSrvConfig)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EndpointServiceServer).Put(ctx, in)
+		return srv.(EndpointServiceServer).Post(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EndpointService_Put_FullMethodName,
+		FullMethod: EndpointService_Post_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EndpointServiceServer).Put(ctx, req.(*EndpointSrvConfig))
+		return srv.(EndpointServiceServer).Post(ctx, req.(*EndpointSrvConfig))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -206,20 +206,20 @@ func _EndpointService_List_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EndpointService_Details_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EndpointService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DetailsEndpointRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EndpointServiceServer).Details(ctx, in)
+		return srv.(EndpointServiceServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EndpointService_Details_FullMethodName,
+		FullMethod: EndpointService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EndpointServiceServer).Details(ctx, req.(*DetailsEndpointRequest))
+		return srv.(EndpointServiceServer).Get(ctx, req.(*DetailsEndpointRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -232,8 +232,8 @@ var EndpointService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*EndpointServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Put",
-			Handler:    _EndpointService_Put_Handler,
+			MethodName: "Post",
+			Handler:    _EndpointService_Post_Handler,
 		},
 		{
 			MethodName: "Update",
@@ -248,8 +248,8 @@ var EndpointService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _EndpointService_List_Handler,
 		},
 		{
-			MethodName: "Details",
-			Handler:    _EndpointService_Details_Handler,
+			MethodName: "Get",
+			Handler:    _EndpointService_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

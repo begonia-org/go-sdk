@@ -22,15 +22,15 @@ type BaseAPI struct {
 	signer  gosdk.AppAuthSigner
 }
 
-const UPLOAD_API = "/api/v1/file"
-const INIT_PART_API = "/api/v1/file/part/init"
-const UPLOAD_PART_API = "/api/v1/file/part"
-const COMPLETE_PART_API = "/api/v1/file/part/complete"
-const ABORT_PART_API = "/api/v1/file/part/abort"
-const Download_API = "/api/v1/file"
-const Metadata_API = "/api/v1/file/metadata"
-const Download_PART_API = "/api/v1/file/part"
-const FILE_API = "/api/v1/file"
+const UPLOAD_API = "/api/v1/files"
+const INIT_PART_API = "/api/v1/files/part/init"
+const UPLOAD_PART_API = "/api/v1/files/part"
+const COMPLETE_PART_API = "/api/v1/files/part/complete"
+const ABORT_PART_API = "/api/v1/files/part/abort"
+const Download_API = "/api/v1/files"
+const Metadata_API = "/api/v1/files/metadata"
+const Download_PART_API = "/api/v1/files/part"
+const FILE_API = "/api/v1/files"
 
 func NewAPIClient(addr, accessKey, secretKey string) *BaseAPI {
 	return &BaseAPI{

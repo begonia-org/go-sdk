@@ -21,18 +21,18 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "endpoint",
+                    "endpoints",
                     "unique_key"
                 ],
                 "Verb": "",
                 "Fields": [
                     "unique_key"
                 ],
-                "Template": "/api/v1/endpoint/{unique_key}"
+                "Template": "/api/v1/endpoints/{unique_key}"
             },
             "HttpMethod": "DELETE",
             "FullMethodName": "/begonia.org.sdk.EndpointService/Delete",
-            "HttpUri": "/api/v1/endpoint/{unique_key}",
+            "HttpUri": "/api/v1/endpoints/{unique_key}",
             "PathParams": [
                 "unique_key"
             ],
@@ -45,7 +45,7 @@
             "OutPkg": "begonia.org.sdk"
         }
     ],
-    "/begonia.org.sdk.EndpointService/Details": [
+    "/begonia.org.sdk.EndpointService/Get": [
         {
             "Pattern": {},
             "Template": {
@@ -67,18 +67,18 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "endpoint",
+                    "endpoints",
                     "unique_key"
                 ],
                 "Verb": "",
                 "Fields": [
                     "unique_key"
                 ],
-                "Template": "/api/v1/endpoint/{unique_key}"
+                "Template": "/api/v1/endpoints/{unique_key}"
             },
             "HttpMethod": "GET",
-            "FullMethodName": "/begonia.org.sdk.EndpointService/Details",
-            "HttpUri": "/api/v1/endpoint/{unique_key}",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/Get",
+            "HttpUri": "/api/v1/endpoints/{unique_key}",
             "PathParams": [
                 "unique_key"
             ],
@@ -102,23 +102,20 @@
                     2,
                     1,
                     2,
-                    2,
-                    2,
-                    3
+                    2
                 ],
                 "Pool": [
                     "api",
                     "v1",
-                    "endpoint",
-                    "batch"
+                    "endpoints"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/endpoint/batch"
+                "Template": "/api/v1/endpoints"
             },
             "HttpMethod": "GET",
             "FullMethodName": "/begonia.org.sdk.EndpointService/List",
-            "HttpUri": "/api/v1/endpoint/batch",
+            "HttpUri": "/api/v1/endpoints",
             "PathParams": [],
             "InName": "ListEndpointRequest",
             "OutName": "ListEndpointResponse",
@@ -129,7 +126,7 @@
             "OutPkg": "begonia.org.sdk"
         }
     ],
-    "/begonia.org.sdk.EndpointService/Put": [
+    "/begonia.org.sdk.EndpointService/Post": [
         {
             "Pattern": {},
             "Template": {
@@ -145,15 +142,15 @@
                 "Pool": [
                     "api",
                     "v1",
-                    "endpoint"
+                    "endpoints"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/api/v1/endpoint"
+                "Template": "/api/v1/endpoints"
             },
             "HttpMethod": "POST",
-            "FullMethodName": "/begonia.org.sdk.EndpointService/Put",
-            "HttpUri": "/api/v1/endpoint",
+            "FullMethodName": "/begonia.org.sdk.EndpointService/Post",
+            "HttpUri": "/api/v1/endpoints",
             "PathParams": [],
             "InName": "EndpointSrvConfig",
             "OutName": "AddEndpointResponse",
@@ -175,21 +172,32 @@
                     2,
                     1,
                     2,
-                    2
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
                 ],
                 "Pool": [
                     "api",
                     "v1",
-                    "endpoint"
+                    "endpoints",
+                    "unique_key"
                 ],
                 "Verb": "",
-                "Fields": null,
-                "Template": "/api/v1/endpoint"
+                "Fields": [
+                    "unique_key"
+                ],
+                "Template": "/api/v1/endpoints/{unique_key}"
             },
-            "HttpMethod": "PATCH",
+            "HttpMethod": "PUT",
             "FullMethodName": "/begonia.org.sdk.EndpointService/Update",
-            "HttpUri": "/api/v1/endpoint",
-            "PathParams": [],
+            "HttpUri": "/api/v1/endpoints/{unique_key}",
+            "PathParams": [
+                "unique_key"
+            ],
             "InName": "EndpointSrvUpdateRequest",
             "OutName": "UpdateEndpointResponse",
             "IsClientStream": false,
