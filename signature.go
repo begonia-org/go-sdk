@@ -365,6 +365,7 @@ func (app *AppAuthSignerImpl) Sign(request *GatewayRequest) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("Failed to create canonical request: %w", err)
 	}
+	// log.Printf("canonicalRequest:%s", canonicalRequest)
 	stringToSignStr, err := app.StringToSign(canonicalRequest, t)
 	// log.Printf("stringToSign:%s", stringToSignStr)
 	if err != nil {
