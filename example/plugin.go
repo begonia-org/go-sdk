@@ -14,13 +14,13 @@ type PluginService struct {
 	api.UnimplementedPluginServiceServer
 }
 
-func (p *PluginService) Call(ctx context.Context, in *api.PluginRequest) (*api.PluginResponse, error) {
+func (p *PluginService) Apply(ctx context.Context, in *api.PluginRequest) (*api.PluginResponse, error) {
 	md := make(map[string]string)
 	md["key"] = "value"
 	return &api.PluginResponse{Metadata: md, NewRequest: in.Request}, nil
 }
 
-func (p *PluginService) GetPluginInfo(ctx context.Context, in *emptypb.Empty) (*api.PluginInfo, error) {
+func (p *PluginService) Info(ctx context.Context, in *emptypb.Empty) (*api.PluginInfo, error) {
 	return &api.PluginInfo{Name: "example", Version: "1234"}, nil
 }
 

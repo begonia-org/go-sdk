@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -127,7 +128,7 @@ func (bc *BaseAPI) unmarshal(rsp *http.Response, v interface{}) (*Response, erro
 		return dataRsp, fmt.Errorf("Failed to marshal data to JSON: %w", err)
 	}
 	if err := protojson.Unmarshal(jsonBytes, v.(protoreflect.ProtoMessage)); err != nil {
-		return dataRsp, fmt.Errorf("Failed to unmarshal JSON to Endpoint: %w", err)
+		return dataRsp, fmt.Errorf("Failed to unmarshal JSON rsp to Endpoint: %w", err)
 	}
 	return dataRsp, nil
 
@@ -146,7 +147,16 @@ func (bc *BaseAPI) PatchEndpointConfig(ctx context.Context, config *api.Endpoint
 			return nil, err
 		}
 		pMap["update_mask"] = strings.Join(mask.Paths, ",")
+		log.Printf("mask: %v", pMap["update_mask"])
+
 		payload, _ = json.Marshal(pMap)
+		// patch := &api.EndpointSrvUpdateRequest{}
+		// err = json.Unmarshal(payload, patch)
+		// if err != nil {
+		// 	log.Printf("Failed to unmarshal JSON to Endpoint: %v", err)
+
+		// }
+		// log.Printf("patch: %v", patch.UpdateMask.Paths)
 	}
 
 	rsp, err := bc.Put(ctx, "/api/v1/endpoints/"+config.UniqueKey, nil, strings.NewReader(string(payload)))
@@ -212,7 +222,7 @@ func (bc *BaseAPI) List(ctx context.Context, tags []string, keys []string) (*End
 		if err != nil {
 			return nil, err
 		}
-		return &EndpointListResponse{Response: resp,ListEndpointResponse: list}, nil
+		return &EndpointListResponse{Response: resp, ListEndpointResponse: list}, nil
 	}
 	return nil, errors.New("get endpoint list failed")
 }

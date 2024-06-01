@@ -1,5 +1,5 @@
 {
-    "/begonia.org.sdk.PluginService/Call": [
+    "/begonia.org.sdk.PluginService/Apply": [
         {
             "Pattern": {},
             "Template": {
@@ -8,22 +8,19 @@
                     2,
                     0,
                     2,
-                    1,
-                    2,
-                    2
+                    1
                 ],
                 "Pool": [
                     "v1",
-                    "plugin",
-                    "call"
+                    "plugin"
                 ],
                 "Verb": "",
                 "Fields": null,
-                "Template": "/v1/plugin/call"
+                "Template": "/v1/plugin"
             },
             "HttpMethod": "POST",
-            "FullMethodName": "/begonia.org.sdk.PluginService/Call",
-            "HttpUri": "/v1/plugin/call",
+            "FullMethodName": "/begonia.org.sdk.PluginService/Apply",
+            "HttpUri": "/v1/plugin",
             "PathParams": [],
             "InName": "PluginRequest",
             "OutName": "PluginResponse",
@@ -34,7 +31,7 @@
             "OutPkg": "begonia.org.sdk"
         }
     ],
-    "/begonia.org.sdk.PluginService/GetPluginInfo": [
+    "/begonia.org.sdk.PluginService/Info": [
         {
             "Pattern": {},
             "Template": {
@@ -57,7 +54,7 @@
                 "Template": "/v1/plugin/info"
             },
             "HttpMethod": "GET",
-            "FullMethodName": "/begonia.org.sdk.PluginService/GetPluginInfo",
+            "FullMethodName": "/begonia.org.sdk.PluginService/Info",
             "HttpUri": "/v1/plugin/info",
             "PathParams": [],
             "InName": "Empty",

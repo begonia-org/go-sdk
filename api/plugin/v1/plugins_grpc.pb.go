@@ -20,16 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	PluginService_Call_FullMethodName          = "/begonia.org.sdk.PluginService/Call"
-	PluginService_GetPluginInfo_FullMethodName = "/begonia.org.sdk.PluginService/GetPluginInfo"
+	PluginService_Apply_FullMethodName = "/begonia.org.sdk.PluginService/Apply"
+	PluginService_Info_FullMethodName  = "/begonia.org.sdk.PluginService/Info"
 )
 
 // PluginServiceClient is the client API for PluginService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PluginServiceClient interface {
-	Call(ctx context.Context, in *PluginRequest, opts ...grpc.CallOption) (*PluginResponse, error)
-	GetPluginInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PluginInfo, error)
+	Apply(ctx context.Context, in *PluginRequest, opts ...grpc.CallOption) (*PluginResponse, error)
+	Info(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PluginInfo, error)
 }
 
 type pluginServiceClient struct {
@@ -40,18 +40,18 @@ func NewPluginServiceClient(cc grpc.ClientConnInterface) PluginServiceClient {
 	return &pluginServiceClient{cc}
 }
 
-func (c *pluginServiceClient) Call(ctx context.Context, in *PluginRequest, opts ...grpc.CallOption) (*PluginResponse, error) {
+func (c *pluginServiceClient) Apply(ctx context.Context, in *PluginRequest, opts ...grpc.CallOption) (*PluginResponse, error) {
 	out := new(PluginResponse)
-	err := c.cc.Invoke(ctx, PluginService_Call_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, PluginService_Apply_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *pluginServiceClient) GetPluginInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PluginInfo, error) {
+func (c *pluginServiceClient) Info(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PluginInfo, error) {
 	out := new(PluginInfo)
-	err := c.cc.Invoke(ctx, PluginService_GetPluginInfo_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, PluginService_Info_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,8 +62,8 @@ func (c *pluginServiceClient) GetPluginInfo(ctx context.Context, in *emptypb.Emp
 // All implementations must embed UnimplementedPluginServiceServer
 // for forward compatibility
 type PluginServiceServer interface {
-	Call(context.Context, *PluginRequest) (*PluginResponse, error)
-	GetPluginInfo(context.Context, *emptypb.Empty) (*PluginInfo, error)
+	Apply(context.Context, *PluginRequest) (*PluginResponse, error)
+	Info(context.Context, *emptypb.Empty) (*PluginInfo, error)
 	mustEmbedUnimplementedPluginServiceServer()
 }
 
@@ -71,11 +71,11 @@ type PluginServiceServer interface {
 type UnimplementedPluginServiceServer struct {
 }
 
-func (UnimplementedPluginServiceServer) Call(context.Context, *PluginRequest) (*PluginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Call not implemented")
+func (UnimplementedPluginServiceServer) Apply(context.Context, *PluginRequest) (*PluginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Apply not implemented")
 }
-func (UnimplementedPluginServiceServer) GetPluginInfo(context.Context, *emptypb.Empty) (*PluginInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPluginInfo not implemented")
+func (UnimplementedPluginServiceServer) Info(context.Context, *emptypb.Empty) (*PluginInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Info not implemented")
 }
 func (UnimplementedPluginServiceServer) mustEmbedUnimplementedPluginServiceServer() {}
 
@@ -90,38 +90,38 @@ func RegisterPluginServiceServer(s grpc.ServiceRegistrar, srv PluginServiceServe
 	s.RegisterService(&PluginService_ServiceDesc, srv)
 }
 
-func _PluginService_Call_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PluginService_Apply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PluginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServiceServer).Call(ctx, in)
+		return srv.(PluginServiceServer).Apply(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PluginService_Call_FullMethodName,
+		FullMethod: PluginService_Apply_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServiceServer).Call(ctx, req.(*PluginRequest))
+		return srv.(PluginServiceServer).Apply(ctx, req.(*PluginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PluginService_GetPluginInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PluginService_Info_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PluginServiceServer).GetPluginInfo(ctx, in)
+		return srv.(PluginServiceServer).Info(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PluginService_GetPluginInfo_FullMethodName,
+		FullMethod: PluginService_Info_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PluginServiceServer).GetPluginInfo(ctx, req.(*emptypb.Empty))
+		return srv.(PluginServiceServer).Info(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -134,12 +134,12 @@ var PluginService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PluginServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Call",
-			Handler:    _PluginService_Call_Handler,
+			MethodName: "Apply",
+			Handler:    _PluginService_Apply_Handler,
 		},
 		{
-			MethodName: "GetPluginInfo",
-			Handler:    _PluginService_GetPluginInfo_Handler,
+			MethodName: "Info",
+			Handler:    _PluginService_Info_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
