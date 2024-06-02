@@ -43,7 +43,25 @@ type EndpointListResponse struct {
 	*Response
 	*api.ListEndpointResponse
 }
+type EndpointOption func(*api.EndpointSrvConfig)
 
+func WithDescription(desc string) EndpointOption {
+	return func(c *api.EndpointSrvConfig) {
+		c.Description = desc
+	}
+
+}
+func WithTags(tags []string) EndpointOption {
+	return func(c *api.EndpointSrvConfig) {
+		c.Tags = tags
+	}
+
+}
+func WithBalance(balance string) EndpointOption {
+	return func(c *api.EndpointSrvConfig) {
+		c.Balance = balance
+	}
+}
 func NewEndpointAPI(addr, accessKey, secretKey string) *EndpointAPI {
 	return &EndpointAPI{
 		NewAPIClient(addr, accessKey, secretKey),
@@ -150,13 +168,7 @@ func (bc *BaseAPI) PatchEndpointConfig(ctx context.Context, config *api.Endpoint
 		log.Printf("mask: %v", pMap["update_mask"])
 
 		payload, _ = json.Marshal(pMap)
-		// patch := &api.EndpointSrvUpdateRequest{}
-		// err = json.Unmarshal(payload, patch)
-		// if err != nil {
-		// 	log.Printf("Failed to unmarshal JSON to Endpoint: %v", err)
 
-		// }
-		// log.Printf("patch: %v", patch.UpdateMask.Paths)
 	}
 
 	rsp, err := bc.Put(ctx, "/api/v1/endpoints/"+config.UniqueKey, nil, strings.NewReader(string(payload)))
