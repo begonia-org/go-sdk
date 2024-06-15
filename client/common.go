@@ -23,6 +23,8 @@ type BaseAPI struct {
 }
 
 const UPLOAD_API = "/api/v1/files"
+const FILE_LIST_API = "/api/v1/files/list"
+const BUCKET_API = "/api/v1/files/buckets"
 const INIT_PART_API = "/api/v1/files/part/init"
 const UPLOAD_PART_API = "/api/v1/files/part"
 const COMPLETE_PART_API = "/api/v1/files/part/complete"

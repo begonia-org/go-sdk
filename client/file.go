@@ -20,6 +20,7 @@ import (
 
 type FilesAPI struct {
 	*BaseAPI
+	engine api.FileEngine
 }
 
 type UploadFileAPIResponse struct {
@@ -42,15 +43,24 @@ type FileMetadataAPIResponse struct {
 	*Response
 	*api.FileMetadataResponse
 }
+type FileListAPIResponse struct {
+	*Response
+	*api.ListFilesResponse
+}
+type CreateBucketResponse struct {
+	*Response
+	*api.MakeBucketResponse
+}
 
-func NewFilesAPI(addr, accessKey, secretKey string) *FilesAPI {
+func NewFilesAPI(addr, accessKey, secretKey string, engine api.FileEngine) *FilesAPI {
 	return &FilesAPI{
-		NewAPIClient(addr, accessKey, secretKey),
+		BaseAPI: NewAPIClient(addr, accessKey, secretKey),
+		engine:  engine,
 	}
 }
 
 // UploadFile upload file to server
-func (f *FilesAPI) UploadFile(ctx context.Context, srcPath string, dst string, useVersion bool) (*UploadFileAPIResponse, error) {
+func (f *FilesAPI) UploadFile(ctx context.Context, srcPath string, dst string, bucket string, useVersion bool) (*UploadFileAPIResponse, error) {
 
 	data, err := os.ReadFile(srcPath)
 	if err != nil {
@@ -67,6 +77,8 @@ func (f *FilesAPI) UploadFile(ctx context.Context, srcPath string, dst string, u
 		Sha256:      hashStr,
 		ContentType: http.DetectContentType(data),
 		UseVersion:  useVersion,
+		Engine:      f.engine.String(),
+		Bucket:      bucket,
 	}
 	payload, err := json.Marshal(&content)
 	if err != nil {
@@ -96,6 +108,7 @@ func (f *FilesAPI) UploadFile(ctx context.Context, srcPath string, dst string, u
 func (f *FilesAPI) AbortUpload(ctx context.Context, uploadId string) (*AbortUploadAPIResponse, error) {
 	content := &api.AbortMultipartUploadRequest{
 		UploadId: uploadId,
+		Engine:   f.engine.String(),
 	}
 	payload, err := json.Marshal(&content)
 	if err != nil {
@@ -126,6 +139,7 @@ func (f *FilesAPI) UploadPart(ctx context.Context, data []byte, key string, part
 		UploadId:   uploadId,
 		Content:    data,
 		Sha256:     hashStr,
+		Engine:     f.engine.String(),
 	}
 	var err error
 	defer func(ctx context.Context) {
@@ -151,12 +165,14 @@ func (f *FilesAPI) UploadPart(ctx context.Context, data []byte, key string, part
 	}
 	return nil, nil
 }
-func (f *FilesAPI) CompleteUpload(ctx context.Context, key string, uploadId string, sha256 string, useVersion bool) (*UploadCompleteAPIResponse, error) {
+func (f *FilesAPI) CompleteUpload(ctx context.Context, key string, uploadId string, sha256 string, bucket string, useVersion bool) (*UploadCompleteAPIResponse, error) {
 	req := &api.CompleteMultipartUploadRequest{
 		UploadId:   uploadId,
 		Key:        key,
 		Sha256:     sha256,
 		UseVersion: useVersion,
+		Bucket:     bucket,
+		Engine:     f.engine.String(),
 	}
 	payload, err := json.Marshal(req)
 	if err != nil {
@@ -177,9 +193,10 @@ func (f *FilesAPI) CompleteUpload(ctx context.Context, key string, uploadId stri
 	}
 	return nil, nil
 }
-func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key string, useVersion bool) (*UploadCompleteAPIResponse, error) {
+func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key string, bucket string, useVersion bool) (*UploadCompleteAPIResponse, error) {
 	initReq := &api.InitiateMultipartUploadRequest{
-		Key: key,
+		Key:    key,
+		Engine: f.engine.String(),
 	}
 	payload, err := json.Marshal(initReq)
 	if err != nil {
@@ -253,15 +270,17 @@ func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key
 		// completeReq := &api.CompleteMultipartUploadRequest{}
 		// return apiRsp,nil
 		hexStr := fmt.Sprintf("%x", sha.Sum(nil))
-		return f.CompleteUpload(ctx, key, apiRsp.UploadId, hexStr, useVersion)
+		return f.CompleteUpload(ctx, key, apiRsp.UploadId, hexStr, bucket, useVersion)
 	}
 	return nil, nil
 }
 
-func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, version string) (string, error) {
+func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, version string, bucket string) (string, error) {
 	// uri := fmt.Sprintf("%s?key=%s&version=%s", Download_API, key, version)
 	values := url.Values{}
 	values.Add("key", key)
+	values.Add("bucket", bucket)
+	values.Add("engine", f.engine.String())
 	if version != "" {
 		values.Add("version", version)
 
@@ -297,9 +316,11 @@ func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, ver
 	return "", fmt.Errorf("Failed to download file")
 }
 
-func (f *FilesAPI) RangeDownload(ctx context.Context, key string, version string, start, end int64) ([]byte, error) {
+func (f *FilesAPI) RangeDownload(ctx context.Context, key string, version string, start, end int64, bucket string) ([]byte, error) {
 	values := url.Values{}
 	values.Add("key", key)
+	values.Add("bucket", bucket)
+	values.Add("engine", f.engine.String())
 	if version != "" {
 		values.Add("version", version)
 
@@ -344,10 +365,12 @@ func (f *FilesAPI) RangeDownload(ctx context.Context, key string, version string
 	}
 	return nil, fmt.Errorf("Failed to download file")
 }
-func (f *FilesAPI) Metadata(ctx context.Context, key string, version string) (*FileMetadataAPIResponse, error) {
+func (f *FilesAPI) Metadata(ctx context.Context, key string, version string, bucket string) (*FileMetadataAPIResponse, error) {
 	// uri := fmt.Sprintf("%s?key=%s&version=%s", Download_API, key, version)
 	values := url.Values{}
 	values.Add("key", key)
+	values.Add("bucket", bucket)
+	values.Add("engine", f.engine.String())
 	if version != "" {
 		values.Add("version", version)
 
@@ -386,8 +409,8 @@ func (f *FilesAPI) Metadata(ctx context.Context, key string, version string) (*F
 	}
 	return nil, fmt.Errorf("Failed to get file metadata")
 }
-func (f *FilesAPI) DownloadMultiParts(ctx context.Context, key string, dst string, version string) (*FileMetadataAPIResponse, error) {
-	metadata, err := f.Metadata(ctx, key, version)
+func (f *FilesAPI) DownloadMultiParts(ctx context.Context, key string, dst string, version string, bucket string) (*FileMetadataAPIResponse, error) {
+	metadata, err := f.Metadata(ctx, key, version, bucket)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to get file metadata: %w", err)
 	}
@@ -407,7 +430,7 @@ func (f *FilesAPI) DownloadMultiParts(ctx context.Context, key string, dst strin
 		if rangeEndAt > metadata.Size {
 			rangeEndAt = metadata.Size - 1
 		}
-		data, err := f.RangeDownload(ctx, key, version, rangeStartAt, rangeEndAt)
+		data, err := f.RangeDownload(ctx, key, version, rangeStartAt, rangeEndAt, bucket)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to download part: %w", err)
 		}
@@ -420,9 +443,11 @@ func (f *FilesAPI) DownloadMultiParts(ctx context.Context, key string, dst strin
 	return metadata, nil
 }
 
-func (f *FilesAPI) DeleteFile(ctx context.Context, key string) (*Response, error) {
+func (f *FilesAPI) DeleteFile(ctx context.Context, key string, bucket string) (*Response, error) {
 	values := url.Values{}
 	values.Add("key", key)
+	values.Add("bucket", bucket)
+	values.Add("engine", f.engine.String())
 	uri := fmt.Sprintf("%s?%s", FILE_API, values.Encode())
 	rsp, err := f.Delete(ctx, uri, nil, nil)
 	if err != nil {
@@ -437,4 +462,58 @@ func (f *FilesAPI) DeleteFile(ctx context.Context, key string) (*Response, error
 		return resp, nil
 	}
 	return nil, fmt.Errorf("Failed to delete file")
+}
+func (f *FilesAPI) CreateBucket(ctx context.Context, bucket string,region string,objectLocking bool) (*CreateBucketResponse, error) {
+	content := &api.MakeBucketRequest{
+		Bucket: bucket,
+		Engine: f.engine.String(),
+		Region: region,
+		ObjectLocking: objectLocking,
+	}
+	payload, err := json.Marshal(content)
+	if err != nil {
+		return nil, err
+	}
+	rsp, err := f.Post(ctx, BUCKET_API, nil, bytes.NewReader(payload))
+	if err != nil {
+		return nil, err
+	}
+	if rsp != nil {
+		apiRsp := &api.MakeBucketResponse{}
+		resp, err := f.unmarshal(rsp, apiRsp)
+		if err != nil {
+			return nil, err
+		}
+		return &CreateBucketResponse{Response: resp,MakeBucketResponse: apiRsp}, nil
+	}
+	return nil, fmt.Errorf("Failed to delete files")
+}
+func (f *FilesAPI) ListFiles(ctx context.Context, engine,bucket string,page int32,pageSize int32) (*FileListAPIResponse, error) {
+	values := url.Values{}
+	if engine != "" {
+		values.Add("engine", engine)
+	}
+	if bucket != "" {
+		values.Add("bucket", bucket)
+	
+	}
+	values.Add("page",fmt.Sprintf("%d",page))
+	values.Add("page_size",fmt.Sprintf("%d",pageSize))
+	uri := fmt.Sprintf("%s?%s", FILE_LIST_API, values.Encode())
+	rsp, err := f.Get(ctx, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	if rsp != nil {
+		apiRsp := &api.ListFilesResponse{}
+		resp, err := f.unmarshal(rsp, apiRsp)
+		if err != nil {
+			return nil, err
+		}
+		return &FileListAPIResponse{
+			Response:           resp,
+			ListFilesResponse: apiRsp,
+		}, nil
+	}
+	return nil, fmt.Errorf("Failed to list files")
 }

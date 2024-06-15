@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	FileService_Upload_FullMethodName                  = "/begonia.org.sdk.FileService/Upload"
+	FileService_MakeBucket_FullMethodName              = "/begonia.org.sdk.FileService/MakeBucket"
 	FileService_UploadMultipartFile_FullMethodName     = "/begonia.org.sdk.FileService/UploadMultipartFile"
 	FileService_InitiateMultipartUpload_FullMethodName = "/begonia.org.sdk.FileService/InitiateMultipartUpload"
 	FileService_CompleteMultipartUpload_FullMethodName = "/begonia.org.sdk.FileService/CompleteMultipartUpload"
@@ -28,6 +29,7 @@ const (
 	FileService_Download_FullMethodName                = "/begonia.org.sdk.FileService/Download"
 	FileService_Delete_FullMethodName                  = "/begonia.org.sdk.FileService/Delete"
 	FileService_DownloadForRange_FullMethodName        = "/begonia.org.sdk.FileService/DownloadForRange"
+	FileService_ListFiles_FullMethodName               = "/begonia.org.sdk.FileService/ListFiles"
 	FileService_Metadata_FullMethodName                = "/begonia.org.sdk.FileService/Metadata"
 )
 
@@ -36,6 +38,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileServiceClient interface {
 	Upload(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
+	MakeBucket(ctx context.Context, in *MakeBucketRequest, opts ...grpc.CallOption) (*MakeBucketResponse, error)
 	UploadMultipartFile(ctx context.Context, in *UploadMultipartFileRequest, opts ...grpc.CallOption) (*UploadMultipartFileResponse, error)
 	InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...grpc.CallOption) (*InitiateMultipartUploadResponse, error)
 	CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest, opts ...grpc.CallOption) (*CompleteMultipartUploadResponse, error)
@@ -43,6 +46,7 @@ type FileServiceClient interface {
 	Download(ctx context.Context, in *DownloadRequest, opts ...grpc.CallOption) (*httpbody.HttpBody, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	DownloadForRange(ctx context.Context, in *DownloadRequest, opts ...grpc.CallOption) (*httpbody.HttpBody, error)
+	ListFiles(ctx context.Context, in *ListFilesRequest, opts ...grpc.CallOption) (*ListFilesResponse, error)
 	Metadata(ctx context.Context, in *FileMetadataRequest, opts ...grpc.CallOption) (*FileMetadataResponse, error)
 }
 
@@ -57,6 +61,15 @@ func NewFileServiceClient(cc grpc.ClientConnInterface) FileServiceClient {
 func (c *fileServiceClient) Upload(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error) {
 	out := new(UploadFileResponse)
 	err := c.cc.Invoke(ctx, FileService_Upload_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileServiceClient) MakeBucket(ctx context.Context, in *MakeBucketRequest, opts ...grpc.CallOption) (*MakeBucketResponse, error) {
+	out := new(MakeBucketResponse)
+	err := c.cc.Invoke(ctx, FileService_MakeBucket_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -126,6 +139,15 @@ func (c *fileServiceClient) DownloadForRange(ctx context.Context, in *DownloadRe
 	return out, nil
 }
 
+func (c *fileServiceClient) ListFiles(ctx context.Context, in *ListFilesRequest, opts ...grpc.CallOption) (*ListFilesResponse, error) {
+	out := new(ListFilesResponse)
+	err := c.cc.Invoke(ctx, FileService_ListFiles_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *fileServiceClient) Metadata(ctx context.Context, in *FileMetadataRequest, opts ...grpc.CallOption) (*FileMetadataResponse, error) {
 	out := new(FileMetadataResponse)
 	err := c.cc.Invoke(ctx, FileService_Metadata_FullMethodName, in, out, opts...)
@@ -140,6 +162,7 @@ func (c *fileServiceClient) Metadata(ctx context.Context, in *FileMetadataReques
 // for forward compatibility
 type FileServiceServer interface {
 	Upload(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
+	MakeBucket(context.Context, *MakeBucketRequest) (*MakeBucketResponse, error)
 	UploadMultipartFile(context.Context, *UploadMultipartFileRequest) (*UploadMultipartFileResponse, error)
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
 	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
@@ -147,6 +170,7 @@ type FileServiceServer interface {
 	Download(context.Context, *DownloadRequest) (*httpbody.HttpBody, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	DownloadForRange(context.Context, *DownloadRequest) (*httpbody.HttpBody, error)
+	ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error)
 	Metadata(context.Context, *FileMetadataRequest) (*FileMetadataResponse, error)
 	mustEmbedUnimplementedFileServiceServer()
 }
@@ -157,6 +181,9 @@ type UnimplementedFileServiceServer struct {
 
 func (UnimplementedFileServiceServer) Upload(context.Context, *UploadFileRequest) (*UploadFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
+}
+func (UnimplementedFileServiceServer) MakeBucket(context.Context, *MakeBucketRequest) (*MakeBucketResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MakeBucket not implemented")
 }
 func (UnimplementedFileServiceServer) UploadMultipartFile(context.Context, *UploadMultipartFileRequest) (*UploadMultipartFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadMultipartFile not implemented")
@@ -178,6 +205,9 @@ func (UnimplementedFileServiceServer) Delete(context.Context, *DeleteRequest) (*
 }
 func (UnimplementedFileServiceServer) DownloadForRange(context.Context, *DownloadRequest) (*httpbody.HttpBody, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadForRange not implemented")
+}
+func (UnimplementedFileServiceServer) ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFiles not implemented")
 }
 func (UnimplementedFileServiceServer) Metadata(context.Context, *FileMetadataRequest) (*FileMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Metadata not implemented")
@@ -209,6 +239,24 @@ func _FileService_Upload_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileServiceServer).Upload(ctx, req.(*UploadFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileService_MakeBucket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MakeBucketRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServiceServer).MakeBucket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileService_MakeBucket_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServiceServer).MakeBucket(ctx, req.(*MakeBucketRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -339,6 +387,24 @@ func _FileService_DownloadForRange_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileService_ListFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFilesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServiceServer).ListFiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileService_ListFiles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServiceServer).ListFiles(ctx, req.(*ListFilesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _FileService_Metadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FileMetadataRequest)
 	if err := dec(in); err != nil {
@@ -369,6 +435,10 @@ var FileService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _FileService_Upload_Handler,
 		},
 		{
+			MethodName: "MakeBucket",
+			Handler:    _FileService_MakeBucket_Handler,
+		},
+		{
 			MethodName: "UploadMultipartFile",
 			Handler:    _FileService_UploadMultipartFile_Handler,
 		},
@@ -395,6 +465,10 @@ var FileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DownloadForRange",
 			Handler:    _FileService_DownloadForRange_Handler,
+		},
+		{
+			MethodName: "ListFiles",
+			Handler:    _FileService_ListFiles_Handler,
 		},
 		{
 			MethodName: "Metadata",

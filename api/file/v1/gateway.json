@@ -230,6 +230,82 @@
             "OutPkg": "begonia.org.sdk"
         }
     ],
+    "/begonia.org.sdk.FileService/ListFiles": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "files",
+                    "list"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/files/list"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.FileService/ListFiles",
+            "HttpUri": "/api/v1/files/list",
+            "PathParams": [],
+            "InName": "ListFilesRequest",
+            "OutName": "ListFilesResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.FileService/MakeBucket": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "files",
+                    "buckets"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/files/buckets"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.FileService/MakeBucket",
+            "HttpUri": "/api/v1/files/buckets",
+            "PathParams": [],
+            "InName": "MakeBucketRequest",
+            "OutName": "MakeBucketResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
     "/begonia.org.sdk.FileService/Metadata": [
         {
             "Pattern": {},

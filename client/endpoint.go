@@ -43,24 +43,69 @@ type EndpointListResponse struct {
 	*Response
 	*api.ListEndpointResponse
 }
-type EndpointOption func(*api.EndpointSrvConfig)
+type EndpointInterface interface {
+	GetBalance() string
+	GetDescription() string
+	GetDescriptorSet() []byte
+	GetEndpoints() []*api.EndpointMeta
+	GetName() string
+	GetTags() []string
+	ProtoReflect() protoreflect.Message
+}
+type EndpointOption func(EndpointInterface)
 
+func setEndpointByName(e EndpointInterface, name string, value interface{}) {
+	field := e.ProtoReflect().Descriptor().Fields().ByName(protoreflect.Name(name))
+	if field == nil {
+		log.Printf("field %s not found", name)
+		return
+	}
+	e.ProtoReflect().Set(field, protoreflect.ValueOf(value))
+}
 func WithDescription(desc string) EndpointOption {
-	return func(c *api.EndpointSrvConfig) {
-		c.Description = desc
+	return func(e EndpointInterface) {
+		// c.Description = desc
+		setEndpointByName(e, "description", desc)
 	}
 
 }
 func WithTags(tags []string) EndpointOption {
-	return func(c *api.EndpointSrvConfig) {
-		c.Tags = tags
+	return func(e EndpointInterface) {
+		// c.Tags = tags
+		setEndpointByName(e, "tags", tags)
+	}
+
+}
+func WithDescriptorSet(pb []byte) EndpointOption {
+	return func(e EndpointInterface) {
+		// c.DescriptorSet = pb
+		setEndpointByName(e, "descriptor_set", pb)
 	}
 
 }
 func WithBalance(balance string) EndpointOption {
-	return func(c *api.EndpointSrvConfig) {
-		c.Balance = balance
+	return func(e EndpointInterface) {
+		setEndpointByName(e, "balance", balance)
 	}
+}
+func WithEndpoints(endpoints []*api.EndpointMeta) EndpointOption {
+	return func(e EndpointInterface) {
+		setEndpointByName(e, "endpoints", endpoints)
+	}
+}
+func WithName(name string) EndpointOption {
+	return func(e EndpointInterface) {
+		setEndpointByName(e, "name", name)
+	}
+
+}
+
+func NewEndpointSrvConfig(opts ...EndpointOption) EndpointInterface {
+	c := &api.EndpointSrvConfig{}
+	for _, opt := range opts {
+		opt(c)
+	}
+	return c
 }
 func NewEndpointAPI(addr, accessKey, secretKey string) *EndpointAPI {
 	return &EndpointAPI{
@@ -165,7 +210,6 @@ func (bc *BaseAPI) PatchEndpointConfig(ctx context.Context, config *api.Endpoint
 			return nil, err
 		}
 		pMap["update_mask"] = strings.Join(mask.Paths, ",")
-		log.Printf("mask: %v", pMap["update_mask"])
 
 		payload, _ = json.Marshal(pMap)
 
