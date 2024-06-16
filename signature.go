@@ -142,10 +142,11 @@ func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod 
 	u, _ := url.Parse(fmt.Sprintf("http://%s%s", host, uri))
 	var payload []byte
 	payload, _ = json.Marshal(req)
-
 	if xparams != "" {
 		payload = filtersUriParams(xparams, payload)
 	}
+	// log.Printf("payload:%s", payload)
+
 	reader := io.NopCloser(bytes.NewBuffer(payload))
 
 	return &GatewayRequest{Headers: headers,
@@ -220,7 +221,7 @@ func (app *AppAuthSignerImpl) CanonicalURI(request *GatewayRequest) string {
 	if len(urlpath) == 0 || urlpath[len(urlpath)-1] != '/' {
 		urlpath = urlpath + "/"
 	}
-	// // log.Printf("canonicalURI:%s", urlpath)
+	// log.Printf("canonicalURI:%s", urlpath)
 	return urlpath
 }
 
@@ -286,16 +287,17 @@ func (app *AppAuthSignerImpl) SignedHeaders(r *GatewayRequest) []string {
 }
 
 // RequestPayload
-func (app *AppAuthSignerImpl) RequestPayload(request *GatewayRequest) ([]byte, error) {
+func (app *AppAuthSignerImpl) RequestPayload(request *GatewayRequest) (io.ReadCloser, error) {
 	if request.Payload == nil {
-		return []byte(""), nil
+		return io.NopCloser(bytes.NewBufferString("")), nil
 	}
-	bodyByte, err := io.ReadAll(request.Payload)
-	if err != nil {
-		return []byte(""), err
-	}
-	request.Payload = io.NopCloser(bytes.NewBuffer(bodyByte))
-	return bodyByte, err
+
+	var buf bytes.Buffer
+	tee := io.TeeReader(request.Payload, &buf)
+
+	// 使用 TeeReader 将数据写入缓冲区，同时返回读取器
+	request.Payload = io.NopCloser(&buf)
+	return io.NopCloser(tee), nil
 }
 
 // Create a "String to Sign".
@@ -316,13 +318,23 @@ func (app *AppAuthSignerImpl) SignStringToSign(stringToSign string, signingKey [
 }
 
 // HexEncodeSHA256Hash returns hexcode of sha256
-func (app *AppAuthSignerImpl) HexEncodeSHA256Hash(body []byte) (string, error) {
+func (app *AppAuthSignerImpl) HexEncodeSHA256Hash(body io.ReadCloser) (string, error) {
+	defer body.Close()
 	hashStruct := sha256.New()
-	if len(body) == 0 {
-		body = []byte("")
+
+	buf := make([]byte, 4096)
+	for {
+		n, err := body.Read(buf)
+		if err != nil && err != io.EOF {
+			return "", err
+		}
+		if n == 0 {
+			break
+		}
+		hashStruct.Write(buf[:n])
 	}
-	_, err := hashStruct.Write(body)
-	return fmt.Sprintf("%x", hashStruct.Sum(nil)), err
+
+	return fmt.Sprintf("%x", hashStruct.Sum(nil)), nil
 }
 
 // Get the finalized value for the "Authorization" header. The signature parameter is the output from SignStringToSign

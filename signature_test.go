@@ -1,7 +1,9 @@
 package gosdk
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"net/url"
 	"sort"
 	"testing"
@@ -23,6 +25,7 @@ func TestSignature(t *testing.T) {
 		err := signer.SignRequest(req)
 		c.So(err, c.ShouldBeNil)
 		t.Log(req.Headers.Get(HeaderXAuthorization))
+		t.Log(signer.(*AppAuthSignerImpl).HexEncodeSHA256Hash(io.NopCloser(bytes.NewBufferString(`{"key":"test.txt","bucket":"bucket-minio-biz-20240615020417","engine":"FILE_ENGINE_MINIO"}`))))
 	})
 }
 func TestSignature2(t *testing.T) {
