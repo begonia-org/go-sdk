@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -274,16 +275,28 @@ func (f *FilesAPI) UploadFileWithMuiltParts(ctx context.Context, src string, key
 	}
 	return nil, nil
 }
+func IsSnowflakeID(id string) bool {
+	// 检查字符串长度
+	if len(id) < 18 || len(id) > 19 {
+		return false
+	}
 
+	// 尝试将字符串转换为整数
+	_, err := strconv.ParseInt(id, 10, 64)
+	return err == nil
+}
 func (f *FilesAPI) DownloadFile(ctx context.Context, key string, dst string, version string, bucket string) (string, error) {
 	// uri := fmt.Sprintf("%s?key=%s&version=%s", Download_API, key, version)
 	values := url.Values{}
-	values.Add("key", key)
+	if !IsSnowflakeID(key) {
+		values.Add("key", key)
+	}else{
+		values.Add("file_id", key)
+	}
 	values.Add("bucket", bucket)
 	values.Add("engine", f.engine.String())
 	if version != "" {
 		values.Add("version", version)
-
 	}
 	uri := fmt.Sprintf("%s?%s", Download_API, values.Encode())
 	headers := make(map[string]string)
@@ -463,11 +476,11 @@ func (f *FilesAPI) DeleteFile(ctx context.Context, key string, bucket string) (*
 	}
 	return nil, fmt.Errorf("Failed to delete file")
 }
-func (f *FilesAPI) CreateBucket(ctx context.Context, bucket string,region string,objectLocking bool) (*CreateBucketResponse, error) {
+func (f *FilesAPI) CreateBucket(ctx context.Context, bucket string, region string, objectLocking bool) (*CreateBucketResponse, error) {
 	content := &api.MakeBucketRequest{
-		Bucket: bucket,
-		Engine: f.engine.String(),
-		Region: region,
+		Bucket:        bucket,
+		Engine:        f.engine.String(),
+		Region:        region,
 		ObjectLocking: objectLocking,
 	}
 	payload, err := json.Marshal(content)
@@ -484,21 +497,21 @@ func (f *FilesAPI) CreateBucket(ctx context.Context, bucket string,region string
 		if err != nil {
 			return nil, err
 		}
-		return &CreateBucketResponse{Response: resp,MakeBucketResponse: apiRsp}, nil
+		return &CreateBucketResponse{Response: resp, MakeBucketResponse: apiRsp}, nil
 	}
 	return nil, fmt.Errorf("Failed to delete files")
 }
-func (f *FilesAPI) ListFiles(ctx context.Context, engine,bucket string,page int32,pageSize int32) (*FileListAPIResponse, error) {
+func (f *FilesAPI) ListFiles(ctx context.Context, engine, bucket string, page int32, pageSize int32) (*FileListAPIResponse, error) {
 	values := url.Values{}
 	if engine != "" {
 		values.Add("engine", engine)
 	}
 	if bucket != "" {
 		values.Add("bucket", bucket)
-	
+
 	}
-	values.Add("page",fmt.Sprintf("%d",page))
-	values.Add("page_size",fmt.Sprintf("%d",pageSize))
+	values.Add("page", fmt.Sprintf("%d", page))
+	values.Add("page_size", fmt.Sprintf("%d", pageSize))
 	uri := fmt.Sprintf("%s?%s", FILE_LIST_API, values.Encode())
 	rsp, err := f.Get(ctx, uri, nil)
 	if err != nil {
@@ -511,7 +524,7 @@ func (f *FilesAPI) ListFiles(ctx context.Context, engine,bucket string,page int3
 			return nil, err
 		}
 		return &FileListAPIResponse{
-			Response:           resp,
+			Response:          resp,
 			ListFilesResponse: apiRsp,
 		}, nil
 	}
