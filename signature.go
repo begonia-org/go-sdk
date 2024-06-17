@@ -49,6 +49,8 @@ const (
 	HeaderXAuthorization = "Authorization"
 	HeaderXContentSha256 = "X-Content-Sha256"
 	HeaderXAccessKey     = "X-Access-Key"
+	HeaderXApiKey        = "X-Api-Key"
+	HeaderXIdentity      = "X-Identity"
 )
 
 func (h *RequestHeader) Set(key, value string) {

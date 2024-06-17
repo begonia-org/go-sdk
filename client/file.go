@@ -77,7 +77,6 @@ func (f *FilesAPI) UploadFile(ctx context.Context, srcPath string, dst string, b
 		Content:     data,
 		Sha256:      hashStr,
 		ContentType: http.DetectContentType(data),
-		UseVersion:  useVersion,
 		Engine:      f.engine.String(),
 		Bucket:      bucket,
 	}
@@ -171,7 +170,6 @@ func (f *FilesAPI) CompleteUpload(ctx context.Context, key string, uploadId stri
 		UploadId:   uploadId,
 		Key:        key,
 		Sha256:     sha256,
-		UseVersion: useVersion,
 		Bucket:     bucket,
 		Engine:     f.engine.String(),
 	}
@@ -476,12 +474,13 @@ func (f *FilesAPI) DeleteFile(ctx context.Context, key string, bucket string) (*
 	}
 	return nil, fmt.Errorf("Failed to delete file")
 }
-func (f *FilesAPI) CreateBucket(ctx context.Context, bucket string, region string, objectLocking bool) (*CreateBucketResponse, error) {
+func (f *FilesAPI) CreateBucket(ctx context.Context, bucket string, region string, objectLocking,enableVersion bool) (*CreateBucketResponse, error) {
 	content := &api.MakeBucketRequest{
 		Bucket:        bucket,
 		Engine:        f.engine.String(),
 		Region:        region,
 		ObjectLocking: objectLocking,
+		EnableVersion: enableVersion,
 	}
 	payload, err := json.Marshal(content)
 	if err != nil {

@@ -7,6 +7,9 @@ import (
 const (
 	MetadataKeyPrefix = "x-begonia"
 )
+const AccessKeyType = "access_key"
+const ApiKeyType = "api_key"
+const UidType = "uid"
 
 func GetMetadataKey(key string) string {
 	return MetadataKeyPrefix + "-" + strings.ToLower(key)
