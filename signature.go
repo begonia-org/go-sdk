@@ -170,14 +170,19 @@ func NewGatewayRequestFromHttp(req *http.Request) (*GatewayRequest, error) {
 		headers.Set(k, strings.Join(v, ","))
 	}
 	// payload := []byte("")
-	var payload []byte = []byte("{}")
+	var payload io.ReadCloser = io.NopCloser(bytes.NewBuffer([]byte("{}")))
 	if req.Body != nil {
-		payload, _ = io.ReadAll(req.Body)
-		req.Body = io.NopCloser(bytes.NewBuffer(payload))
+		var buf bytes.Buffer
+		tee := io.TeeReader(req.Body, &buf)
+
+		// payload, _ = io.ReadAll(req.Body)
+		req.Body = io.NopCloser(&buf)
+		payload = io.NopCloser(tee)
+
 	}
 	var reader io.ReadCloser
 	if payload != nil {
-		reader = io.NopCloser(bytes.NewBuffer(payload))
+		reader = payload
 
 	}
 	return &GatewayRequest{Headers: headers, Method: req.Method, URL: req.URL, Host: req.Host, Payload: reader}, nil
