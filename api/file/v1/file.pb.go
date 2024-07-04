@@ -1433,13 +1433,13 @@ type FileMetadataRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @gotags: validate:"required" doc:"文件名,仅支持相对路径，例如test/a.txt,不支持/开头的绝对路径"
-	Key     string `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty" validate:"required" doc:"文件名,仅支持相对路径，例如test/a.txt,不支持/开头的绝对路径"`
+	// @gotags: validate:"required_if=FileId" doc:"文件名,仅支持相对路径，例如test/a.txt,不支持/开头的绝对路径"
+	Key     string `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty" validate:"required_if=FileId" doc:"文件名,仅支持相对路径，例如test/a.txt,不支持/开头的绝对路径"`
 	Version string `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
-	// @gotags: validate:"required" doc:"bucket名称"
-	Bucket string `protobuf:"bytes,3,opt,name=bucket,proto3" json:"bucket,omitempty" validate:"required" doc:"bucket名称"`
-	// @gotags: validate:"required,oneof=FILE_ENGINE_LOCAL FILE_ENGINE_MINIO FILE_ENGINE_S3 FILE_ENGINE_OSS" doc:"存储引擎"
-	Engine string `protobuf:"bytes,6,opt,name=engine,proto3" json:"engine,omitempty" validate:"required,oneof=FILE_ENGINE_LOCAL FILE_ENGINE_MINIO FILE_ENGINE_S3 FILE_ENGINE_OSS" doc:"存储引擎"`
+	// @gotags: validate:"required_if=FileId" doc:"bucket名称"
+	Bucket string `protobuf:"bytes,3,opt,name=bucket,proto3" json:"bucket,omitempty" validate:"required_if=FileId" doc:"bucket名称"`
+	// @gotags: validate:"required_if=FileId",oneof=FILE_ENGINE_LOCAL FILE_ENGINE_MINIO FILE_ENGINE_S3 FILE_ENGINE_OSS" doc:"存储引擎"
+	Engine string `protobuf:"bytes,6,opt,name=engine,proto3" json:"engine,omitempty" validate:"required_if=FileId" doc:"存储引擎"`
 	FileId string `protobuf:"bytes,7,opt,name=file_id,proto3" json:"file_id,omitempty"`
 }
 

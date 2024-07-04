@@ -124,6 +124,565 @@
             "OutPkg": "begonia.org.sdk"
         }
     ],
+    "/begonia.org.sdk.BusinessService/Add": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "business"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/business"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.BusinessService/Add",
+            "HttpUri": "/api/v1/business",
+            "PathParams": [],
+            "InName": "PostBusinessRequest",
+            "OutName": "Business",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.BusinessService/Delete": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "business"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "business"
+                ],
+                "Template": "/api/v1/business/{business}"
+            },
+            "HttpMethod": "DELETE",
+            "FullMethodName": "/begonia.org.sdk.BusinessService/Delete",
+            "HttpUri": "/api/v1/business/{business}",
+            "PathParams": [
+                "business"
+            ],
+            "InName": "DeleteBusinessRequest",
+            "OutName": "DeleteBusinessResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.BusinessService/Get": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "business"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "business"
+                ],
+                "Template": "/api/v1/business/{business}"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.BusinessService/Get",
+            "HttpUri": "/api/v1/business/{business}",
+            "PathParams": [
+                "business"
+            ],
+            "InName": "GetBusinessRequest",
+            "OutName": "Business",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.BusinessService/List": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "business"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/business"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.BusinessService/List",
+            "HttpUri": "/api/v1/business",
+            "PathParams": [],
+            "InName": "ListBusinessRequest",
+            "OutName": "ListBusinessResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.BusinessService/Update": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "business",
+                    "business_id"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "business_id"
+                ],
+                "Template": "/api/v1/business/{business_id}"
+            },
+            "HttpMethod": "PUT",
+            "FullMethodName": "/begonia.org.sdk.BusinessService/Update",
+            "HttpUri": "/api/v1/business/{business_id}",
+            "PathParams": [
+                "business_id"
+            ],
+            "InName": "PatchBusinessRequest",
+            "OutName": "Business",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/AddTenantBusiness": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants",
+                    "business"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/tenants/business"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/AddTenantBusiness",
+            "HttpUri": "/api/v1/tenants/business",
+            "PathParams": [],
+            "InName": "AddTenantBusinessRequest",
+            "OutName": "TenantsBusiness",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/Delete": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants",
+                    "tenant"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "tenant"
+                ],
+                "Template": "/api/v1/tenants/{tenant}"
+            },
+            "HttpMethod": "DELETE",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/Delete",
+            "HttpUri": "/api/v1/tenants/{tenant}",
+            "PathParams": [
+                "tenant"
+            ],
+            "InName": "DeleteTenantRequest",
+            "OutName": "DeleteTenantResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/DeleteTenantBusiness": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    4,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    5
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants",
+                    "business",
+                    "tenant_id",
+                    "business_id"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "tenant_id",
+                    "business_id"
+                ],
+                "Template": "/api/v1/tenants/business/{tenant_id}/{business_id}"
+            },
+            "HttpMethod": "DELETE",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/DeleteTenantBusiness",
+            "HttpUri": "/api/v1/tenants/business/{tenant_id}/{business_id}",
+            "PathParams": [
+                "tenant_id",
+                "business_id"
+            ],
+            "InName": "DeleteTenantBusinessRequest",
+            "OutName": "DeleteTenantBusinessResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/Get": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants",
+                    "tenant"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "tenant"
+                ],
+                "Template": "/api/v1/tenants/{tenant}"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/Get",
+            "HttpUri": "/api/v1/tenants/{tenant}",
+            "PathParams": [
+                "tenant"
+            ],
+            "InName": "GetTenantRequest",
+            "OutName": "Tenants",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/List": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/tenants"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/List",
+            "HttpUri": "/api/v1/tenants",
+            "PathParams": [],
+            "InName": "ListTenantsRequest",
+            "OutName": "ListTenantsResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/ListTenantBusiness": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    2,
+                    3,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    4
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants",
+                    "business",
+                    "tenant"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "tenant"
+                ],
+                "Template": "/api/v1/tenants/business/{tenant}"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/ListTenantBusiness",
+            "HttpUri": "/api/v1/tenants/business/{tenant}",
+            "PathParams": [
+                "tenant"
+            ],
+            "InName": "ListTenantBusinessRequest",
+            "OutName": "ListTenantBusinessResponse",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/Register": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/api/v1/tenants"
+            },
+            "HttpMethod": "POST",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/Register",
+            "HttpUri": "/api/v1/tenants",
+            "PathParams": [],
+            "InName": "PostTenantRequest",
+            "OutName": "Tenants",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
+    "/begonia.org.sdk.TenantsService/Update": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2,
+                    1,
+                    0,
+                    4,
+                    1,
+                    5,
+                    3
+                ],
+                "Pool": [
+                    "api",
+                    "v1",
+                    "tenants",
+                    "tenant_id"
+                ],
+                "Verb": "",
+                "Fields": [
+                    "tenant_id"
+                ],
+                "Template": "/api/v1/tenants/{tenant_id}"
+            },
+            "HttpMethod": "PUT",
+            "FullMethodName": "/begonia.org.sdk.TenantsService/Update",
+            "HttpUri": "/api/v1/tenants/{tenant_id}",
+            "PathParams": [
+                "tenant_id"
+            ],
+            "InName": "PatchTenantRequest",
+            "OutName": "Tenants",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "begonia.org.sdk",
+            "OutPkg": "begonia.org.sdk"
+        }
+    ],
     "/begonia.org.sdk.UserService/Delete": [
         {
             "Pattern": {},

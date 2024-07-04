@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"runtime"
+	"strings"
 
 	common "github.com/begonia-org/go-sdk/common/api/v1"
 	"google.golang.org/grpc/codes"
@@ -46,7 +47,19 @@ func NewError(err error, code int32, grpcCode codes.Code, action string, opts ..
 	if fn != nil {
 		funcName = fn.Name()
 	}
-
+	if strings.Contains(err.Error(), "Duplicate entry") && code == int32(common.Code_INTERNAL_ERROR) {
+		code = int32(common.Code_CONFLICT)
+		grpcCode = codes.AlreadyExists
+	}
+	// log.Printf("gosdk error:%s,code:%d", err.Error(), code)
+	if strings.Contains(err.Error(), "not found") && code == int32(common.Code_INTERNAL_ERROR) {
+		code = int32(common.Code_NOT_FOUND)
+		grpcCode = codes.NotFound
+	}
+	if strings.Contains(err.Error(), "InvalidArgument") && code == int32(common.Code_INTERNAL_ERROR) {
+		code = int32(common.Code_PARAMS_ERROR)
+		grpcCode = codes.InvalidArgument
+	}
 	srvErr := &common.Errors{
 		Code:    code,
 		Message: err.Error(),

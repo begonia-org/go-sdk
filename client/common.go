@@ -100,6 +100,7 @@ func (bc *BaseAPI) Patch(ctx context.Context, uri string, headers map[string]str
 	api, _ := url.JoinPath(bc.baseUrl, uri)
 
 	req := bc.buildRequest(ctx, http.MethodPatch, api, headers, payload)
+
 	req.Header.Set("Content-Type", "application/json")
 
 	return bc.request(ctx, req)
@@ -111,7 +112,9 @@ func (bc *BaseAPI) Head(ctx context.Context, uri string, headers map[string]stri
 }
 func (bc *BaseAPI) buildRequest(_ context.Context, method, uri string, headers map[string]string, payload io.Reader) *http.Request {
 	uri, _ = url.QueryUnescape(uri)
+	// log.Printf("uri error:%v", err)
 	req, _ := http.NewRequest(method, uri, payload)
+	// log.Printf("make request error:%v", err)
 	req.Header.Set("Accept", "application/json")
 	for k, v := range headers {
 		req.Header.Set(k, v)

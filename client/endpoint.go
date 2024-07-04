@@ -170,8 +170,10 @@ func (bc *BaseAPI) unmarshal(rsp *http.Response, v interface{}) (*Response, erro
 	}
 	defer rsp.Body.Close()
 	requestId := rsp.Header.Get("x-request-id")
+	// log.Printf("client get requestId:%s", requestId)
 	apiRsp := &common.HttpResponse{}
 	data, _ := io.ReadAll(rsp.Body)
+	// log.Printf("response data:%s", string(data))
 	err := protojson.Unmarshal(data, apiRsp)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to unmarshal JSON to HttpResponse: %w", err)
