@@ -46,6 +46,14 @@ var file_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Filename:      "options.proto",
 	},
 	{
+		ExtendedType:  (*descriptorpb.FieldOptions)(nil),
+		ExtensionType: (*string)(nil),
+		Field:         50040,
+		Name:          "begonia.org.sdk.common.api.v1.validate",
+		Tag:           "bytes,50040,opt,name=validate",
+		Filename:      "options.proto",
+	},
+	{
 		ExtendedType:  (*descriptorpb.EnumValueOptions)(nil),
 		ExtensionType: (*string)(nil),
 		Field:         50036,
@@ -78,25 +86,27 @@ var (
 	// optional bool method_auth_reqiured = 50034;
 	E_MethodAuthReqiured = &file_options_proto_extTypes[1]
 	// optional string http_response = 50038;
-	E_HttpResponse = &file_options_proto_extTypes[5]
+	E_HttpResponse = &file_options_proto_extTypes[6]
 )
 
 // Extension fields to descriptorpb.FieldOptions.
 var (
 	// optional bool un_updatable = 50039;
 	E_UnUpdatable = &file_options_proto_extTypes[2]
+	// optional string validate = 50040;
+	E_Validate = &file_options_proto_extTypes[3]
 )
 
 // Extension fields to descriptorpb.EnumValueOptions.
 var (
 	// optional string msg = 50036;
-	E_Msg = &file_options_proto_extTypes[3]
+	E_Msg = &file_options_proto_extTypes[4]
 )
 
 // Extension fields to descriptorpb.FileOptions.
 var (
 	// optional string go_mod_pkg = 50037;
-	E_GoModPkg = &file_options_proto_extTypes[4]
+	E_GoModPkg = &file_options_proto_extTypes[5]
 )
 
 var File_options_proto protoreflect.FileDescriptor
@@ -121,7 +131,11 @@ var file_options_proto_rawDesc = []byte{
 	0x62, 0x6c, 0x65, 0x12, 0x1d, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4f, 0x70, 0x74, 0x69, 0x6f,
 	0x6e, 0x73, 0x18, 0xf7, 0x86, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0b, 0x75, 0x6e, 0x55, 0x70,
-	0x64, 0x61, 0x74, 0x61, 0x62, 0x6c, 0x65, 0x88, 0x01, 0x01, 0x3a, 0x38, 0x0a, 0x03, 0x6d, 0x73,
+	0x64, 0x61, 0x74, 0x61, 0x62, 0x6c, 0x65, 0x88, 0x01, 0x01, 0x3a, 0x3e, 0x0a, 0x08, 0x76, 0x61,
+	0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x12, 0x1d, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4f, 0x70,
+	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0xf8, 0x86, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x76,
+	0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x88, 0x01, 0x01, 0x3a, 0x38, 0x0a, 0x03, 0x6d, 0x73,
 	0x67, 0x12, 0x21, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x62, 0x75, 0x66, 0x2e, 0x45, 0x6e, 0x75, 0x6d, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x4f, 0x70, 0x74,
 	0x69, 0x6f, 0x6e, 0x73, 0x18, 0xf4, 0x86, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73,
@@ -150,13 +164,14 @@ var file_options_proto_depIdxs = []int32{
 	0, // 0: begonia.org.sdk.common.api.v1.auth_reqiured:extendee -> google.protobuf.ServiceOptions
 	0, // 1: begonia.org.sdk.common.api.v1.method_auth_reqiured:extendee -> google.protobuf.ServiceOptions
 	1, // 2: begonia.org.sdk.common.api.v1.un_updatable:extendee -> google.protobuf.FieldOptions
-	2, // 3: begonia.org.sdk.common.api.v1.msg:extendee -> google.protobuf.EnumValueOptions
-	3, // 4: begonia.org.sdk.common.api.v1.go_mod_pkg:extendee -> google.protobuf.FileOptions
-	0, // 5: begonia.org.sdk.common.api.v1.http_response:extendee -> google.protobuf.ServiceOptions
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	0, // [0:6] is the sub-list for extension extendee
+	1, // 3: begonia.org.sdk.common.api.v1.validate:extendee -> google.protobuf.FieldOptions
+	2, // 4: begonia.org.sdk.common.api.v1.msg:extendee -> google.protobuf.EnumValueOptions
+	3, // 5: begonia.org.sdk.common.api.v1.go_mod_pkg:extendee -> google.protobuf.FileOptions
+	0, // 6: begonia.org.sdk.common.api.v1.http_response:extendee -> google.protobuf.ServiceOptions
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	0, // [0:7] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
@@ -172,7 +187,7 @@ func file_options_proto_init() {
 			RawDescriptor: file_options_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   0,
-			NumExtensions: 6,
+			NumExtensions: 7,
 			NumServices:   0,
 		},
 		GoTypes:           file_options_proto_goTypes,
