@@ -65,5 +65,40 @@
             "InPkg": "google.protobuf",
             "OutPkg": "begonia.org.sdk"
         }
+    ],
+    "/begonia.org.sdk.PluginService/Metadata": [
+        {
+            "Pattern": {},
+            "Template": {
+                "Version": 1,
+                "OpCodes": [
+                    2,
+                    0,
+                    2,
+                    1,
+                    2,
+                    2
+                ],
+                "Pool": [
+                    "v1",
+                    "plugin",
+                    "metadata"
+                ],
+                "Verb": "",
+                "Fields": null,
+                "Template": "/v1/plugin/metadata"
+            },
+            "HttpMethod": "GET",
+            "FullMethodName": "/begonia.org.sdk.PluginService/Metadata",
+            "HttpUri": "/v1/plugin/metadata",
+            "PathParams": [],
+            "InName": "Empty",
+            "OutName": "Empty",
+            "IsClientStream": false,
+            "IsServerStream": false,
+            "Pkg": "begonia.org.sdk",
+            "InPkg": "google.protobuf",
+            "OutPkg": "google.protobuf"
+        }
     ]
 }

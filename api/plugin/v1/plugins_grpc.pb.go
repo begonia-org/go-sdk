@@ -20,8 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	PluginService_Apply_FullMethodName = "/begonia.org.sdk.PluginService/Apply"
-	PluginService_Info_FullMethodName  = "/begonia.org.sdk.PluginService/Info"
+	PluginService_Apply_FullMethodName    = "/begonia.org.sdk.PluginService/Apply"
+	PluginService_Info_FullMethodName     = "/begonia.org.sdk.PluginService/Info"
+	PluginService_Metadata_FullMethodName = "/begonia.org.sdk.PluginService/Metadata"
 )
 
 // PluginServiceClient is the client API for PluginService service.
@@ -30,6 +31,7 @@ const (
 type PluginServiceClient interface {
 	Apply(ctx context.Context, in *PluginRequest, opts ...grpc.CallOption) (*PluginResponse, error)
 	Info(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PluginInfo, error)
+	Metadata(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type pluginServiceClient struct {
@@ -58,12 +60,22 @@ func (c *pluginServiceClient) Info(ctx context.Context, in *emptypb.Empty, opts 
 	return out, nil
 }
 
+func (c *pluginServiceClient) Metadata(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PluginService_Metadata_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PluginServiceServer is the server API for PluginService service.
 // All implementations must embed UnimplementedPluginServiceServer
 // for forward compatibility
 type PluginServiceServer interface {
 	Apply(context.Context, *PluginRequest) (*PluginResponse, error)
 	Info(context.Context, *emptypb.Empty) (*PluginInfo, error)
+	Metadata(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedPluginServiceServer()
 }
 
@@ -76,6 +88,9 @@ func (UnimplementedPluginServiceServer) Apply(context.Context, *PluginRequest) (
 }
 func (UnimplementedPluginServiceServer) Info(context.Context, *emptypb.Empty) (*PluginInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Info not implemented")
+}
+func (UnimplementedPluginServiceServer) Metadata(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Metadata not implemented")
 }
 func (UnimplementedPluginServiceServer) mustEmbedUnimplementedPluginServiceServer() {}
 
@@ -126,6 +141,24 @@ func _PluginService_Info_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PluginService_Metadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PluginServiceServer).Metadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PluginService_Metadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PluginServiceServer).Metadata(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PluginService_ServiceDesc is the grpc.ServiceDesc for PluginService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -140,6 +173,10 @@ var PluginService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Info",
 			Handler:    _PluginService_Info_Handler,
+		},
+		{
+			MethodName: "Metadata",
+			Handler:    _PluginService_Metadata_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

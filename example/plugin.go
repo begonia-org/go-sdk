@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"strings"
 
 	api "github.com/begonia-org/go-sdk/api/plugin/v1"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -17,9 +19,34 @@ type PluginService struct {
 func (p *PluginService) Apply(ctx context.Context, in *api.PluginRequest) (*api.PluginResponse, error) {
 	md := make(map[string]string)
 	md["key"] = "value"
-	return &api.PluginResponse{Metadata: md, NewRequest: in.Request}, nil
-}
+	if inmd, ok := metadata.FromIncomingContext(ctx); ok {
+		for k, v := range inmd {
+			md[k] = strings.Join(v, ",")
+		}
+	}
+	newMd := metadata.New(md)
+	err := grpc.SetHeader(ctx, newMd)
+	if err != nil {
+		return nil, err
 
+	}
+	return &api.PluginResponse{NewRequest: in.Request}, nil
+}
+func (p *PluginService) Metadata(ctx context.Context, in *emptypb.Empty) (*emptypb.Empty, error) {
+	md := make(map[string]string)
+	md["key"] = "value"
+	if inmd, ok := metadata.FromIncomingContext(ctx); ok {
+		for k, v := range inmd {
+			md[k] = strings.Join(v, ",")
+		}
+	}
+	newMd := metadata.New(md)
+	err := grpc.SetHeader(ctx, newMd)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
 func (p *PluginService) Info(ctx context.Context, in *emptypb.Empty) (*api.PluginInfo, error) {
 	return &api.PluginInfo{Name: "example", Version: "1234"}, nil
 }

@@ -7,7 +7,7 @@
 package v1
 
 import (
-	_ "github.com/begonia-org/go-sdk/api/common/v1"
+	_ "github.com/begonia-org/go-sdk/common/api/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	httpbody "google.golang.org/genproto/googleapis/api/httpbody"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

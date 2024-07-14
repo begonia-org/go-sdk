@@ -1,0 +1,119 @@
+{
+  "/openrag.KnowledgeBaseService/Create": [
+    {
+      "FullMethodName": "/openrag.KnowledgeBaseService/Create",
+      "HttpMethod": "POST",
+      "HttpUri": "/api/v1/openrag/kb",
+      "InName": "AddKnowledgeBaseRequest",
+      "InPkg": "openrag",
+      "IsClientStream": false,
+      "IsServerStream": false,
+      "OutName": "KnowledgeBase",
+      "OutPkg": "openrag",
+      "PathParams": [],
+      "Pattern": {},
+      "Pkg": "openrag",
+      "Template": {
+        "Fields": null,
+        "OpCodes": [
+          2,
+          0,
+          2,
+          1,
+          2,
+          2,
+          2,
+          3
+        ],
+        "Pool": [
+          "api",
+          "v1",
+          "openrag",
+          "kb"
+        ],
+        "Template": "/api/v1/openrag/kb",
+        "Verb": "",
+        "Version": 1
+      },
+      "http_response": "begonia.api.v1.HttpResponse"
+    }
+  ],
+  "/openrag.LLMService/Create": [
+    {
+      "FullMethodName": "/openrag.LLMService/Create",
+      "HttpMethod": "POST",
+      "HttpUri": "/api/v1/openrag/llm",
+      "InName": "CreateLLMRequest",
+      "InPkg": "openrag",
+      "IsClientStream": false,
+      "IsServerStream": false,
+      "OutName": "LLM",
+      "OutPkg": "openrag",
+      "PathParams": [],
+      "Pattern": {},
+      "Pkg": "openrag",
+      "Template": {
+        "Fields": null,
+        "OpCodes": [
+          2,
+          0,
+          2,
+          1,
+          2,
+          2,
+          2,
+          3
+        ],
+        "Pool": [
+          "api",
+          "v1",
+          "openrag",
+          "llm"
+        ],
+        "Template": "/api/v1/openrag/llm",
+        "Verb": "",
+        "Version": 1
+      },
+      "http_response": "begonia.api.v1.HttpResponse"
+    }
+  ],
+  "/openrag.SystemService/Info": [
+    {
+      "FullMethodName": "/openrag.SystemService/Info",
+      "HttpMethod": "GET",
+      "HttpUri": "/api/v1/openrag/system",
+      "InName": "Empty",
+      "InPkg": "google.protobuf",
+      "IsClientStream": false,
+      "IsServerStream": false,
+      "OutName": "System",
+      "OutPkg": "openrag",
+      "PathParams": [],
+      "Pattern": {},
+      "Pkg": "openrag",
+      "Template": {
+        "Fields": null,
+        "OpCodes": [
+          2,
+          0,
+          2,
+          1,
+          2,
+          2,
+          2,
+          3
+        ],
+        "Pool": [
+          "api",
+          "v1",
+          "openrag",
+          "system"
+        ],
+        "Template": "/api/v1/openrag/system",
+        "Verb": "",
+        "Version": 1
+      },
+      "http_response": "begonia.api.v1.HttpResponse"
+    }
+  ]
+}

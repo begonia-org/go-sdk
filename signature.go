@@ -18,6 +18,8 @@ import (
 	"time"
 
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 type RequestHeader struct {
@@ -37,8 +39,9 @@ type AppAuthSigner interface {
 }
 
 type AppAuthSignerImpl struct {
-	Key    string
-	Secret string
+	Key           string
+	Secret        string
+	EmptyBodySign string
 }
 
 const (
@@ -107,6 +110,33 @@ func filtersUriParams(xparams string, body []byte) []byte {
 	return body
 
 }
+
+// marshal 将grpc请求转换为json
+// 确保json的key是有序的
+func marshal(v interface{}) ([]byte, error) {
+	if v == nil {
+		return []byte("{}"), nil
+	}
+	payload, err := protojson.MarshalOptions{UseProtoNames: true}.Marshal(v.(protoreflect.ProtoMessage))
+	// payload, err := protojson.Marshal(v.(protoreflect.ProtoMessage))
+	if err != nil {
+		return nil, fmt.Errorf("Failed to marshal grpc request: %w", err)
+
+	}
+	var jsonMap map[string]interface{}
+	err = json.Unmarshal(payload, &jsonMap)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to unmarshal grpc request to json: %w", err)
+
+	}
+	orderedJSONBytes, err := json.Marshal(jsonMap)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to marshal JSON with sorted keys:%w", err)
+
+	}
+	return orderedJSONBytes, nil
+
+}
 func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod string) (*GatewayRequest, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	headers := &RequestHeader{headers: make(map[string]string)}
@@ -143,7 +173,15 @@ func NewGatewayRequestFromGrpc(ctx context.Context, req interface{}, fullMethod 
 	}
 	u, _ := url.Parse(fmt.Sprintf("http://%s%s", host, uri))
 	var payload []byte
-	payload, _ = json.Marshal(req)
+	// protojson.MarshalOptions.
+	payload, err := marshal(req)
+	// log.Printf("payload:%s", payload)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to marshal grpc request from grpc: %w", err)
+	}
+	// payload, _ = protojson.Marshal(req.(protoreflect.ProtoMessage))
+	// payload,_=protojson.MarshalOptions{AllowPartial:true}.Marshal(req.(protoreflect.ProtoMessage))
+	// payload, _ = json.Marshal(req)
 	if xparams != "" {
 		payload = filtersUriParams(xparams, payload)
 	}
@@ -188,7 +226,10 @@ func NewGatewayRequestFromHttp(req *http.Request) (*GatewayRequest, error) {
 	return &GatewayRequest{Headers: headers, Method: req.Method, URL: req.URL, Host: req.Host, Payload: reader}, nil
 }
 func NewAppAuthSigner(key, secret string) AppAuthSigner {
-	return &AppAuthSignerImpl{Key: key, Secret: secret}
+	sign := &AppAuthSignerImpl{Key: key, Secret: secret}
+	empty, _ := sign.HexEncodeSHA256Hash(io.NopCloser(bytes.NewBuffer([]byte("{}"))))
+	sign.EmptyBodySign = empty
+	return sign
 }
 func (app *AppAuthSignerImpl) hmacsha256(keyByte []byte, dataStr string) ([]byte, error) {
 	hm := hmac.New(sha256.New, []byte(keyByte))

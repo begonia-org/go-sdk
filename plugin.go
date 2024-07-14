@@ -10,12 +10,13 @@ import (
 type Plugin interface {
 	SetPriority(priority int)
 	Priority() int
-	Name () string
+	Name() string
 }
 type LocalPlugin interface {
 	Plugin
 	UnaryInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error)
 	StreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error
+	StreamClientInterceptor(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error)
 }
 type RemotePlugin interface {
 	Plugin
@@ -32,4 +33,3 @@ func (p Plugins) Swap(i, j int) {
 func (p Plugins) Less(i, j int) bool {
 	return p[i].Priority() > p[j].Priority()
 }
-
