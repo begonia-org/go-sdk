@@ -64,6 +64,11 @@ func (s *server) SayHelloGet(ctx context.Context, in *v1.HelloRequest) (*v1.Hell
 	return &v1.HelloReply{Message: in.Msg, Name: in.Name}, nil
 
 }
+func (s *server) SayHelloRPC(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
+	// fmt.Printf("Received: %v\n", in.GetMsg())
+
+	return &v1.HelloReply{Message: in.Msg, Name: in.Name}, nil
+}
 func (s *server) SayHelloClientStream(stream v1.Greeter_SayHelloClientStreamServer) error {
 	// reply := "你好:"、
 	replies := make([]*v1.HelloReply, 0)

@@ -203,6 +203,7 @@
             "OutPkg": "helloworld"
         }
     ],
+    "/helloworld.Greeter/SayHelloRPC": [],
     "/helloworld.Greeter/SayHelloServerSideEvent": [
         {
             "Pattern": {},

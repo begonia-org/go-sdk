@@ -36,6 +36,19 @@ func (c *client) SayHello() (string, error) {
 	// log.Infof("say hello:%s", r.Message)
 }
 
+func (c *client) SayHelloRPC() (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.gc.SayHello(ctx, &v1.HelloRequest{Msg: "begonia"})
+	if err != nil {
+		log.Errorf("say hello error:%v", err)
+		return "", err
+	}
+	return r.Message, nil
+	// log.Infof("say hello:%s", r.Message)
+}
+
+
 func (c *client) SayHelloStreamReply() (<-chan string, error) {
 
 	stream, err := c.gc.SayHelloServerSideEvent(context.Background(), &v1.HelloRequest{Msg: "begonia"})

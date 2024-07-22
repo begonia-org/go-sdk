@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Greeter_SayHello_FullMethodName                = "/helloworld.Greeter/SayHello"
+	Greeter_SayHelloRPC_FullMethodName             = "/helloworld.Greeter/SayHelloRPC"
 	Greeter_SayHelloGet_FullMethodName             = "/helloworld.Greeter/SayHelloGet"
 	Greeter_SayHelloServerSideEvent_FullMethodName = "/helloworld.Greeter/SayHelloServerSideEvent"
 	Greeter_SayHelloClientStream_FullMethodName    = "/helloworld.Greeter/SayHelloClientStream"
@@ -35,6 +36,7 @@ const (
 type GreeterClient interface {
 	// Sends a greeting
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+	SayHelloRPC(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 	SayHelloGet(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 	SayHelloServerSideEvent(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (Greeter_SayHelloServerSideEventClient, error)
 	SayHelloClientStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloClientStreamClient, error)
@@ -54,6 +56,15 @@ func NewGreeterClient(cc grpc.ClientConnInterface) GreeterClient {
 func (c *greeterClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
 	out := new(HelloReply)
 	err := c.cc.Invoke(ctx, Greeter_SayHello_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) SayHelloRPC(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
+	out := new(HelloReply)
+	err := c.cc.Invoke(ctx, Greeter_SayHelloRPC_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -190,6 +201,7 @@ func (c *greeterClient) SayHelloError(ctx context.Context, in *ErrorRequest, opt
 type GreeterServer interface {
 	// Sends a greeting
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	SayHelloRPC(context.Context, *HelloRequest) (*HelloReply, error)
 	SayHelloGet(context.Context, *HelloRequest) (*HelloReply, error)
 	SayHelloServerSideEvent(*HelloRequest, Greeter_SayHelloServerSideEventServer) error
 	SayHelloClientStream(Greeter_SayHelloClientStreamServer) error
@@ -205,6 +217,9 @@ type UnimplementedGreeterServer struct {
 
 func (UnimplementedGreeterServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+}
+func (UnimplementedGreeterServer) SayHelloRPC(context.Context, *HelloRequest) (*HelloReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayHelloRPC not implemented")
 }
 func (UnimplementedGreeterServer) SayHelloGet(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHelloGet not implemented")
@@ -251,6 +266,24 @@ func _Greeter_SayHello_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GreeterServer).SayHello(ctx, req.(*HelloRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_SayHelloRPC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HelloRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).SayHelloRPC(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_SayHelloRPC_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).SayHelloRPC(ctx, req.(*HelloRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -392,6 +425,10 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SayHello",
 			Handler:    _Greeter_SayHello_Handler,
+		},
+		{
+			MethodName: "SayHelloRPC",
+			Handler:    _Greeter_SayHelloRPC_Handler,
 		},
 		{
 			MethodName: "SayHelloGet",
