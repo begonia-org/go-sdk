@@ -37,6 +37,7 @@ func (s *server) SayHelloServerSideEvent(in *v1.HelloRequest, stream v1.Greeter_
 			Message: fmt.Sprintf("%s-%d", in.Msg, i),
 			Name:    in.Name,
 		}
+		log.Printf("send data:%v", data.Message)
 		if err := stream.Send(data); err != nil {
 			return err
 		}
